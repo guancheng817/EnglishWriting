@@ -1,0 +1,40 @@
+\documentclass[12pt]{article}
+\usepackage{cite}
+\usepackage{CJK}
+\usepackage{graphicx}
+\usepackage{setspace}
+
+\twocolumn
+\begin{document}
+\title{What IS Convolutional Neural Network}
+\author{Cheng Guan}
+\date{May 3, 2018}
+\maketitle
+\setlength{\baselineskip}{20pt}
+
+  Convolutional Neural Network,CNN,is a kind of feedforward neural network.
+  Its artificial neurons can respond to a number of surrounding units in a range of coverage,
+  and have excellent performance for large image processing,which include
+  convolutional layer and pooling layer.\cite{test2}
+
+  Convolution neural networks design neurons into three dimensions:
+   width, height, depth, using the characteristics of input.
+   For example, the size of the input image is 32 x 32 x 3 (RGB),
+   so the input neuron also has a dimension of 32 x 32 x 3.Here are traditonal
+  neural networks pic ~\ref{fig1} and convolutional neural networks pic~\ref{fig2}.
+
+\begin{figure}[ht]
+ \centering
+ \includegraphics[width=5cm,height=5cm]{1.png}
+ \caption{Traditonal Neural Network}
+ \label{fig1}
+\end{figure}
+\begin{figure}[htb!p]
+\includegraphics[width=5cm,height=5cm]{2.png}
+\caption{Convolutional Neural Network}
+\label{fig2}
+\end{figure}
+
+\bibliographystyle{plain}
+\bibliography{cite2}
+\end{document}
