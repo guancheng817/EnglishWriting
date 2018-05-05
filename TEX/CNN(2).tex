@@ -1,0 +1,49 @@
+\documentclass[12pt]{article}
+\usepackage{graphicx}
+\usepackage{cite}
+\usepackage{CJK}
+\usepackage{setspace}
+\usepackage{amsmath}
+
+\twocolumn
+\begin{document}
+\title{CNN(2)}
+\author{Cheng Guan}
+\date{May 5, 2018}
+\maketitle
+\setlength{\baselineskip}{20pt}
+
+  The convolution neural network usually contains the following layers:
+
+  \textbf{Convolutional layer}:The convolution layer of convolution neural network is composed of
+ several convolution units, and the parameters of each convolution unit are optimized by backpropagation algorithm.
+  The purpose of convolution operation is to extract different features of input.
+  The first layer convolution layer may only extract some low-level features such as edges, lines and corners,
+  and more layers can extract more complex features from the low-level features.
+
+  \textbf{Rectified Linear Units layer, ReLU layer}:
+  This layer of neural activation function  uses Rectified Linear Units .
+  \begin{equation}
+    f(x)=max(0,x)
+  \end{equation}
+
+  \textbf{Pooling layer}:
+  The characteristics of a large dimension are usually obtained after convolutional layer,
+   and the features are cut into several regions, and get their maximum or average values ,
+   and a new and smaller dimension is obtained.
+
+  \textbf{Fully-Connected layer}:
+  The combination of all local features into global features
+  is used to calculate the final scores of each class.\cite{test2}
+
+  Here are the application examples of various layers of convolution neural network: picture ~\ref{fig1}
+
+  \begin{figure}[htbp]
+  \centering
+  \includegraphics[width=6cm,heght=8cm]{1.png}\\
+  \caption{Application Example}\label{fig1}
+ \end{figure}
+
+\bibliographystyle{plain}
+\bibliography{cite20}
+\end{document}
