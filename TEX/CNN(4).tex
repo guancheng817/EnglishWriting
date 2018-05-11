@@ -1,0 +1,54 @@
+\documentclass[a4paper,twocolumn]{article}
+\usepackage{indentfirst,graphicx,float}
+\usepackage{balance}
+\usepackage{cite}
+\usepackage{amsmath}
+\bibliographystyle{plain}
+\setlength{\parindent}{2em}
+\linespread{1.5}
+\title{Spatial Arrangement}
+\author{Cheng Guan}
+\date{May 11, 2018}
+\begin{document}
+\maketitle
+\balance
+\section{Spatial Arrangement}
+The size of an output unit is controlled by the following three variables: \textbf{depth, stride and zero-padding}.\\
+\textbf{Depth}: It controls the depth of the output unit, that is, the number of filter, and the number of neurons connected to the same area. Also named: depth column.\\
+\textbf{Stride}: It controls the distance between two adjacent implicit units at the same depth and the input regions connected to them. If the stride is very small (for example, stride = 1), the overlap area of the input area of the adjacent hidden units will be large.\\
+\textbf{Zero-padding}: We can change the size of the input unit by adding zeros around the input unit to control the size of the output unit.\\
+Let's first define a few symbols:\\
+\textbf{W}:The size of the input unit (wide or high)\\
+\textbf{F}:Receptive field\\
+\textbf{S}:Stride \\
+\textbf{P}:Number of zero-padding\\
+\textbf{K}:Depth of output units\\
+
+We can use the following formula to calculate a hidden unit in a single output unit of a dimension (width or height):
+\begin{center}
+    \begin{equation}
+    \frac{W-F+2P}{S}+1
+    \end{equation}
+\end{center}
+
+If the calculation result is not an integer,
+it means that the existing parameters are not suitable for input, stride is not set, or zero is needed.Here is an example to illustrate ~\ref{fig1}.
+This is an example of one dimension. The input unit of the left model has 5,
+that is, W=5, the boundary each complement one zero, that is, P=1, the stride is 1,
+that is, S=1, the receptive field is 3,
+because each output hidden unit connects 3 input units, that is, F=3,
+and the number of the output hidden units can be calculated according to the above formula: $\frac{5-3+2}{1}+1=5$.
+The model on the right is to change the stride to 2, and the rest remains unchanged.
+It can be calculated that the output size is $\frac{5-3+2}{2}+1=3$, which is also consistent with the illustration.
+If the stride is changed to 3,
+the formula can not be divisible, which means that the step size of 3 can not coincide with the size of the input unit.\cite{test2}
+
+\begin{figure*}[htbp]
+\centering
+\includegraphics[scale=0.4]{1.png}
+\caption{Example of Illustration}
+\label{fig1}
+\end{figure*}
+
+\bibliography{cite20}
+\end{document}
