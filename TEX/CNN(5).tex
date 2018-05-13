@@ -1,0 +1,51 @@
+\documentclass[a4paper,twocolumn]{article}
+\usepackage{indentfirst,graphicx,float}
+\usepackage{balance}
+\usepackage{cite}
+\usepackage{amsmath}
+\bibliographystyle{plain}
+\setlength{\parindent}{2em}
+\linespread{1.5}
+\title{Convolutional layer-Convolution}
+\author{Cheng Guan}
+\date{May 13, 2018}
+\begin{document}
+\maketitle
+\balance
+\section{Convolution}
+ Let off the concept of convolution first. For simplicity,
+consider an image of 5 x 5 and a 3 x 3 convolution kernel.
+There are 9 parameters in the convolution kernel here.
+In this case, the convolution kernel actually has 9 neurons,
+and their output forms a 3 x 3 matrix, called the feature graph.
+The first neuron is connected to the first 3 x 3 part of the image, and the second neuron is connected to second part.
+As shown in the following figure ~\ref{fig1}.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=6cm,height=5cm]{1.png}
+\caption{Convolution Process}
+\label{fig1}
+\end{figure}
+
+Above the graph is the output of the first neuron, and below is the output of the second neurons.
+The formula of each neuron is ：\\
+\begin{center}
+    \begin{equation}
+     f(x)=act(\sum_{i,j}^n\theta_{(n-i)(n-j)}x_{ij}+b)
+    \end{equation}
+\end{center}
+
+Now let's recollect the discrete convolution operation.
+Assuming that there are two dimensional discrete functions f (x, y) and g (x, y),
+their convolution is defined as:\\
+\begin{center}
+    \begin{equation}
+     f(m,n)*g(m,n)=\sum_u^{\infty}\sum_v^{\infty}f(u,v)g(m-u,n-v)
+    \end{equation}
+\end{center}
+The 9 neurons in the above example are actually equivalent to the convolution operation of the image and convolution kernel
+after the output of the neurons is completed.\cite{test2}
+
+\bibliography{cite20}
+\end{document}
