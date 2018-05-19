@@ -1,0 +1,66 @@
+\documentclass[a4paper,twocolumn]{article}
+\usepackage{indentfirst,graphicx,float}
+\usepackage{balance}
+\usepackage{cite}
+\usepackage{amsmath}
+\usepackage{balance}
+\usepackage{enumerate}
+\bibliographystyle{plain}
+\setlength{\parindent}{2em}
+\linespread{1.5}
+\title{Pooling Layer}
+\author{Cheng Guan}
+\date{\today}
+\begin{document}
+\maketitle
+
+\section{The Summary on Convolution Layer}
+\begin{enumerate}[1]\setlength{\itemsep}{0pt}
+ \item The input of three dimension:
+   \begin{center}
+      \begin{equation}
+      W_1 * H_1 * D_1
+      \end{equation}
+  \end{center}
+ \item 4 parameters need to be given:\\
+     * Number of filters K\\
+     * Their spatial extent F\\
+     * The stride S\\
+     * The amount of zero padding P
+ \item The output of a three-dimensional unit $W_2 * H_2 * D_2$, which:
+  \begin{center}
+      \begin{equation}
+      W_2=\frac{W_1-F+2P}{S}+1
+      \end{equation}
+      \begin{equation}
+      H_2=\frac{H_1-F+2P}{S}+1
+      \end{equation}
+      \begin{equation}
+      D_2=K
+      \end{equation}
+  \end{center}
+  \end{enumerate}
+  \section{Pooling Layer}
+  Pool (downsamples) is designed to reduce the feature map.
+   The pool operation is independent of each slice of depth,
+   and the scale is generally 2 * 2.The operation of pooling layer is the following\cite{test2}:
+
+    * Max Pooling. Take the maximum of 4 points. This is the most commonly used pooling method.
+
+    * Mean Pooling. Take the mean of the 4 points.
+
+    * Gauss pooling. Draw on the method of Gauss's vagueness. It's not common.
+
+  The most common pooling layer is 2*2 with the stride of 2, and each depth slice of the input is sampled below.
+  Each MAX operation is performed on four numbers, as shown in the following figure ~\ref{fig1}:
+  \begin{figure}[htbp]
+  \centering
+  \includegraphics[scale=0.2]{1.png}
+  \caption{Example of Pooling}
+  \label{fig1}
+  \end{figure}
+  The pool operation will keep the size of depth .
+  If the size of the input unit of the pooling layer is not an integer multiple of two,
+  the zero-padding is generally used to fill the multiple of 2 and then pool.
+  \bibliography{cite2}
+  \end{document}
