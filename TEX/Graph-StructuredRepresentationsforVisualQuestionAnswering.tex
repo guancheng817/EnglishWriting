@@ -1,0 +1,81 @@
+\documentclass[a4paper,twocolumn]{article}
+\usepackage{cite}
+\usepackage{indentfirst,graphicx,float}
+\usepackage{balance}
+\usepackage{amsmath}
+\usepackage{balance}
+\usepackage{capt-of}
+\usepackage[colorlinks,
+            citecolor=green
+            ]{hyperref}
+\bibliographystyle{plain}
+\setlength{\parindent}{2em}
+\linespread{1.5}
+\title{Graph-Structured Representations for Visual Question Answering}
+\author{Cheng Guan}
+\date{May 21 , 2018}
+\begin{document}
+\maketitle
+
+\section{Introduction}
+The task of Visual Question Answering has received
+growing interest in the recent years(see \cite{c1,c2}for example).
+One of the more interesting aspects of the problem
+is that it combines computer vision, natural language processing,
+and artificial intelligence. In its open-ended form,
+a question is provided as text in natural language together
+with an image, and a correct answer must be predicted, typically
+in the form of a single word or a short phrase. In the
+multiple-choice variant, an answer is selected from a provided
+set of candidates, alleviating evaluation issues related
+to synonyms and paraphrasing.Some explanation of nouns in Table \ref{tb1}.
+
+Multiple datasets for VQA have been introduced with
+either real \cite{c1} or synthetic images \cite{c1,c3}.
+Our experiments uses the latter, being based on clip art
+or “cartoon” images created by humans to depict realistic
+scenes (they are usually referred to as “abstract scenes”, despite
+this being a misnomer). Our experiments focus on
+this dataset of clip art scenes as they allow to focus on semantic
+reasoning and vision-language interactions, in isolation
+from the performance of visual recognition see examples
+in Fig.~\ref{fig1}.They also allow the manipulation of
+the image data so as to better illuminate algorithm performance.
+A particularly attractive VQA dataset was introduced
+in \cite{c3} by selecting only the questions with binary answers
+(e.g. yes/no) and pairing each (synthetic) image with
+a minimally-different complementary version that elicits the
+opposite (no/yes) answer (see examples in Fig. ~\ref{fig1}, bottom
+rows). This strongly contrasts with other VQA datasets of
+real images, where a correct answer is often obvious without
+looking at the image, by relying on systematic regularities
+of frequent questions and answers \cite{c1,c3}.
+
+\begin{table}[htbp]
+\label{tb1}
+\caption{Paraphrase}
+\begin{tabular}{|c|c|}
+\hline
+specialized word & paraphrase\\
+\hline
+VQA & Visual Question Answering\\
+CNN & Convolutional Neural Network\\
+LSTM & Long Short-Term Memory\\
+\hline
+\end{tabular}
+\end{table}
+
+  \begin{figure*}[htbp]
+  \centering
+  \includegraphics[scale=0.7]{1.png}
+  \caption{Qualitative results on the “abstract scenes” dataset (top row) and on “balanced” pairs (middle and bottom row). We show the
+input scene, the question, the predicted answer, and the correct answer when the prediction is erroneous. We also visualize the matrices
+of matching weights between question words (vertically) and scene objects (horizontally).
+The matching weights are also visualized over objects in the scene, after summation over words, giving an indication of their estimated
+relevance. The ground truth object labels are for reference only, and not used for training or inference.}
+  \label{fig1}
+  \end{figure*}
+
+
+  \bibliography{c1}
+  \end{document}
