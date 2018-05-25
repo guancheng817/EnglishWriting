@@ -1,0 +1,45 @@
+\documentclass[10pt,twocolumn,a4paper]{article}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[colorlinks,
+            citecolor=green
+            ]{hyperref}
+\usepackage{setspace}
+\renewcommand{\baselinestretch}{1.5}
+\bibliographystyle{plain}
+\setlength{\parindent}{2em}
+\title{Graph Representation And Process With Neural Networks}
+\author{Cheng Guan}
+\date{\today}
+\begin{document}
+\maketitle
+\section{Graph representation of scenes and questions}
+The input data for each training or test instance is a question,
+and a parameterized description of contents of the scene.
+The question is processed with the Stanford dependency parser \cite{c1},
+which outputs the following.
+\begin{itemize}
+\item A set of $N^Q$ words that constitute the nodes of the question graph.Each word is represented by its index in the input vocabulary, a token $x_{i}^{Q}\in \mathbb{Z}\left ( i...N^{Q} \right )$.
+\item A set of pairwise relations between words, which constitute the edges of our graph.An edge between words $i$ and $j$ is represented by $e_{ij}^{Q}\in \mathbb{Z}$,an index among the possible types of dependencies.
+\end{itemize}
+
+The dataset provides the following information about the image .
+\begin{itemize}
+\item A set of pairwise relations between all objects.They form the edges of a fully-connected graph of the scene.The edge between objects $i$ and $j$ is represented by a vector $e_{ij}^S \in \mathbb{R}^{D}$ that encodes relative spatial relationships .
+\item A set of $N^S$ objects that constitute the nodes of the scene graph. Each node is represented by a vector $x_i^S \in \mathbb{R}^C$ of visual features $\left(i \in 1...N^S\right)$. Please refer to the supplementary material for implementation details.
+\end{itemize}
+Our experiments are carried out on datasets of clip art scenes, in which descriptions of
+the scenes are provided in the form of lists of objects with their visual features.
+The method is equally applicable to real images,
+with the object list replaced by candidate object detections. Our experiments on clip art allows the effect of the proposed method to be isolated from the performance of the object detector.
+Please refer to the supplementary material for implementation details
+\begin{equation}
+x_{i}^{'Q}= W_1[x_i^Q]  e_{i}^{'Q}=W_2[e_{ij}^Q]
+\end{equation}
+\begin{equation}
+x_{i}^{'S}= W_3[x_i^Q]+b_3  e_{i}^{'S}=W_4[e_{ij}^S]+b_4
+\end{equation}
+with $W_1$ the word embedding (usually pretrained, see supplementary material), $W_2$ the embedding of dependencies, $W_3 \in \mathbb{R}^{h\times c}$  and$W_4 \in \mathbb{R}^{h\times d}$  weight matrices, and $b_3 \in \mathbb{R}^c$ and $b_r \in \mathbb{R}^d$.
+\bibliography{graphCite1}
+\end{document}
