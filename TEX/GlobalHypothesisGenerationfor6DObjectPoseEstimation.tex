@@ -1,0 +1,98 @@
+\documentclass[10pt,twocolumn,a4paper]{article}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx,float}
+\usepackage{indentfirst}
+\usepackage{balance}
+\usepackage{cite}
+\usepackage[pagebackref=true,breaklinks=true,colorlinks,bookmarks=false]{hyperref}
+\usepackage{geometry}
+\geometry{left=2.0cm,right=2.0cm,top=2.5cm,bottom=2.5cm}
+\setlength{\parindent}{1em}
+\title{Global Hypothesis Generation for 6D Object Pose Estimation}
+\author{Cheng Guan}
+\date{May 30, 2018}
+\begin{document}
+\maketitle
+\begin{abstract}
+  \emph{This paper addresses the task of estimating the 6D pose of a known 3D object
+  from a single RGB-D image. Most modern approaches solve this task in three steps:
+   i) Compute local features; ii) Generate a pool of pose-hypotheses; iii)
+   Select and reﬁne a pose from the pool. This work focuses on the second step.
+   While all existing approaches generate the hypotheses pool via local reasoning,
+   e.g. RANSAC or Hough-voting, we are the ﬁrst to show that global reasoning
+    is beneﬁcial at this stage. In particular, we formulate a novel fully-connected
+     Conditional Random Field (CRF)thatoutputsaverysmallnumberofpose-hypotheses.
+      Despite the potential functions of the CRF being nonGaussian, we give a new and
+       efﬁcient two-step optimization procedure, with some guarantees for optimality.
+   We utilize our global hypotheses generation procedure to produce results that
+   exceed state-of-the-art for the challenging “Occluded Object Dataset”.}
+\end{abstract}
+\section{Introduction}
+Thetaskofestimatingthe6Dposeoftexture-lessobjects has gained
+a lot of attention in recent years. From an application perspective this
+ is probably due to the growing interestinindustrialrobotics,
+ and invarious forms of augmented reality scenarios.
+ From an academic perspective the dataset of Hinterstoisser \emph{et al.} \cite{c1}
+ marked a milestone, since researchers started to benchmark
+ their efforts and progress in research started to be more measurable.
+ In this work we focus on the following task. Given an RGB-D image of a 3Dscene,
+ in which a known 3D object is present,i.e.its3D shape and appearance is known,
+  we would like to identify the 6D pose (3D translation and 3D rotation)
+  of that object.
+
+  Let us consider an exhaustive-search approach to this problem.
+  We generate all possible 6D pose hypotheses,and for each hypothesis
+  we run a robust ICP algorithm \cite{c2} to estimate a robust geometric
+   ﬁt of the 3D model to the underlying data. The ﬁnal ICP score can then be used
+   as the objective function to select the ﬁnal pose. This approach has two great advantages:
+   (i)It considers all hypotheses;(ii) It uses a geometric error to prune all
+   incorrect hypotheses. Obviously,this approach is in feasible from a computational
+   perspective, hence most approaches generate ﬁrst a pool of hypotheses and use a geometrically motivated
+   scoring function to select the right pose, which can be reﬁned with robust ICP if necessary.
+   Table \ref{tb1} lists ﬁve recent works with different strategies
+   for “hypotheses generation” and “geometric selection”.
+   The ﬁrst work by Drost \emph{et al.} \cite{c3},
+    and recently extended by Hinterstoisser \emph{et al.} \cite{c4},
+    has no geometric selection process,and generate savery large number
+    of hypotheses. The pool of hypotheses is put into a Houghspace and the peak of
+    the distribution is found as the ﬁnal pose.Despite its simplicity,
+    the method achieves very good results, especially on the “Occluded Object Dataset”1,
+     i.e. where objects are subject to strong occlusions.
+     We conjecture that the main reason for its success is that it generates hypotheses
+     from all local neighborhoods in the image. Especially for objects that are subject to strong occlusions,
+     it is important to predict poses from as local information as possible.
+     The other three approaches use triplets, and are all similar in spirit.
+
+     \begin{figure}[htbp]
+     \centering
+     \includegraphics[scale=0.4]{1.png}
+     \caption{Given an RGB-D input image(left) we aim at ﬁnding the 6D pose of a given object, despite it being strongly occluded (see zoom). Here our result (green) is correct, while outputs an incorrect pose (red). The key concept of this work is to have a global, and hence powerful, geometric check, in the beginning of the pose estimation pipeline. This is in stark contrast to local geometric checks performed by all other methods.In a ﬁrst step, a random forest predicts for each pixel a set of three possible object coordinates, i.e. dense continuous part labeling of the object (middle). Given this, a fully-connected pairwise Conditional Random Field (CRF) infers globally those pixels which are consistent with the 6D object pose. We refer to those pixels as pose-consistent. The ﬁnal pose is derived from these pose-consistent pixels via an ICP-variant}
+     \label{fig1}
+     \end{figure}
+
+  \newcommand{\tabincell}[2]{\begin{tabular}{@{}#1@{}}#2\end{tabular}}
+  \begin{table*}[htbp]
+  \label{tb1}
+  \begin{tabular}{|c|c|c|c|c|c|c|}
+  \hline
+  \texbf{Method} & \tabincell{c}{Intermediate\\Representation}&\tabincell{c}{Hypotheses\\Generation}&\tabincell{c}{Average Number\\of Hypotheses}&\tabincell{c}{Hypotheses\\Selection}&\tabincell{c}{Hypotheses\\Reﬁnement}&\tabincell{c}{Run\\Time}\\
+  \hline
+  \hline
+  Drost\emph{et al.}\cite{c3}&\tabincell{c}{Dense Point\\Pair Features}&\tabincell{c}{All local\\pairs}&20.000&\tabincell{c}{Sub-optimal\\search}&ICP&0.4s\\
+  our&\tabincell{c}{multiple object\\coordinates}&\tabincell{c}{Fully-connected CRF\\with geometric check}&0-10&\tabincell{c}{Optimal w.r.t.\\ICP variant}&\tabincell{c}{ICP\\variant}&1-3s\\
+  \hline
+  \end{tabular}
+  \caption{A broad categorization of six different 6D object pose estimation methods with respect to four different computational steps: (a) Intermediate representation, (b) Hypotheses generation, (c) Hypotheses selection, (d) Hypotheses reﬁnement, (e) Runtime.}
+  \end{table*}
+
+   In a first step they compute for everypixelone,or more,
+   so-called object coordinates,a 3D continuous part-label on the given
+   object (see Fig. \ref{fig1} right). Then they collect locally triplets of points,
+   in [33] these are all local triplets and  they are randomly sampled with RANSAC.
+   For each triplet of object coordinates they ﬁrst perform a
+   geometry consistency check , and if successful,
+   they compute the 6D object pose, using the Kabsch algorithm.
+\bibliographystyle{plain}
+\bibliography{6D}
+\end{document}
