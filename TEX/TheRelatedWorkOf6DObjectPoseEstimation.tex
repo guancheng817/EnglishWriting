@@ -1,0 +1,69 @@
+\documentclass[10pt,twocolumn,a4paper]{article}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx,float}
+\usepackage{indentfirst}
+\usepackage{balance}
+\usepackage{cite}
+\usepackage[pagebackref=true,breaklinks=true,colorlinks,bookmarks=false]{hyperref}
+\usepackage{geometry}
+\geometry{left=2.0cm,right=2.0cm,top=2.5cm,bottom=2.5cm}
+\setlength{\parindent}{1em}
+\title{The Related Work of 6D Object Pose Estimation}
+\author{Cheng Guan}
+\date{\today}
+\begin{document}
+\maketitle
+\section{Related work}
+  The topic of object detection and pose estimation has
+been widely researched in the past decade. In the brief review below,
+ we focus only on recent works and split them into three categories.
+ We will omit the methods \cite{c1} since they were already discussed
+ in the previous section.
+
+ \textbf{Sampling-Based Methods.} Sparse feature based methods \cite{c2}
+ have shown good results for accurate pose estimation. They extract points of
+ interest and match them based on a RANSAC sampling scheme. With the shift of the
+ application scenario into robotics their popularity declined since they rely on texture.
+  Shotton \emph{et al.} \cite{c3} addressed the task of camera re-localization by introducing the concept of scene coordinates.
+  They learn a mapping from camera coordinates to world coordinates and generate camera pose hypotheses by
+   random sampling. Most recently Phillips \emph{et al.} \cite{c4} presented a method for
+   pose estimation and shape recovery of transparent objects where a random forest is trained
+   to detect transparent object contours. Those edge responses are clustered and random sampling
+  is employed to ﬁnd the axis of revolution of the object. Instead of
+   randomly selecting individual pixels we will use the entirety of the image to
+   ﬁnd pose hypotheses.
+
+   \textbf{Non-Sampling-BasedMethods.} An alternative to random sampling of pose hypotheses are
+   Hough-voting based methods where all pixels cast a vote into a quantized
+   prediction space (e.g. 2D object center and scale). The cell with the majority
+   of votes is taken as the winner. Template  have also been applied to the task
+   of pose estimation. To ﬁnd the best match the template is scanned across
+   the image and a distance metric is computed at each position. Those
+    methods are harmed by clutter and occlusion which disqualiﬁes them to be
+     applied toourscenario. In our approach each pixel is processed,but
+     instead of them voting individually we ﬁnd pose-consistent pixel-sets
+     by global reasoning.
+
+     \textbf{Pose Estimation using Graphical Models.}In an older piece of work
+     the pose of object categories was found in images either in 2D or in 3D.
+     They also use the key concept of discretized object coordinates for object
+      detection and pose estimation. The MRF-inference stage for ﬁnding
+      pose-consistent pixels is closely related to ours. Foreground pixels are
+      accepted when the layout consistency constraint (where layout consistency
+      means that neighboring pixels should be long to the same part)is satisﬁed.
+      However since the shape of the object is unknown, the pairwise terms are
+      not as strong as in our case. The closest related work to ours is Bergholdt
+      \emph{et al.} \cite{c5}. They use the same strategy of discriminatively
+      modeling the local appearance of object parts and globally inferring the
+       geometric connections between them. To detect and ﬁnd the pose of
+       articulated objects (faces, human spines, human poses) they extract
+       feature points locally and combine them in a probabilistic,
+       fully-connected, graphical model. However they rely on a exact solution to the problem
+       while a partial optimal solution is sufﬁcient in our case.
+       We therefore employ a different approach to solve the task.
+
+
+     \bibliographystyle{plain}
+     \bibliography{RelatedWork}
+      \end{document}
