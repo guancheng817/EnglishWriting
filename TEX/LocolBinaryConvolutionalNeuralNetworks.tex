@@ -1,0 +1,47 @@
+\documentclass[10pt,twocolumn,a4paper]{article}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx,float}
+\usepackage{indentfirst}
+\usepackage{balance}
+\usepackage{cite}
+\usepackage[pagebackref=true,breaklinks=true,colorlinks,bookmarks=false]{hyperref}
+\usepackage{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\def\cvprPaperID{****} % *** Enter the CVPR Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+\geometry{left=2.0cm,right=2.0cm,top=2.5cm,bottom=2.5cm}
+\setlength{\parindent}{1em}
+\title{Local Binary Convolutional Neural Networks}
+\author{Cheng Guan}
+\date{\today}
+\begin{document}
+\maketitle
+\section{Introduction}
+
+Deep learning has been overwhelmingly successful in a broad range of applications, such as computer vision, speech recognition / natural language processing, machine translation, bio-medical data analysis, and many more. Deep convolutional neural networks (CNN), in particular, have enjoyed huge success in tackling many computer vision problems over the past few years, thanks to the tremendous development of many effective architectures, AlexNet \cite{krizhevsky2012imagenet}, VGG \cite{simonyan2014very} and Inception \cite{szegedy2015going}  to name a few. However, training these networks end-to-end with fully learnable convolutional kernels (as is standard practice) is (1) computationally very expensive, (2) results in large model size, both in terms of memory usage and disk space, and (3) prone to over-fitting, under limited data, due to the large number of parameters.
+
+On the other hand, there is a growing need for deploying, both for learning and inference, these systems on resource constrained platforms like, autonomous cars, robots, smartphones, smart cameras, smart wearable devices, etc. To address these drawbacks, several binary versions of CNNs have been proposed \cite{courbariaux2015binaryconnect,rastegari2016xnor} that approximate the dense real-valued weights with binary weights. Binary weights bear dramatic computational savings through efficient implementations of binary convolutions. Complete binarization of CNNs, though, leads to performance loss in comparison to real-valued network weights. In this paper, we present an alternative approach to reducing the computational complexity of CNNs while performing as well as standard CNNs. We introduce the local binary convolution (LBC) layer that approximates the non-linearly activated response of a standard convolutional layer. The LBC layer comprises of fixed sparse binary filters (called anchor weights), a non-linear activation function and a set of learnable linear weights that computes weighted combinations of the activated convolutional response maps. Learning reduces to optimizing the linear weights, as opposed to optimizing the convolutional filters. Parameter savings of at least 9$\times$to 169$\times$ can be realized during the learning stage depending on the spatial dimensions of the convolutional filters (3 $\times$ 3 to 13 $\times$  13 sized filters respectively), as well as computational and memory savings due to the sparse nature of the binary filters. CNNs with LBC layers, called local binary convolutional neural networks (LBCNN)1, have much lower model complexity and are as such less prone to over-fitting and are well suited for learning and inference of CNNs in resource-constrained environments.
+
+Our theoretical analysis shows that the LBC layer is a good approximation for the non-linear activations of standard convolutional layers. We also demonstrate empirically that CNNs with LBC layers performs comparably to regular CNNs on a range of visual datasets (MNIST, SVHN, CIFAR-10, and ImageNet) while enjoying significant savings in terms of the number of parameters during training,computations, as well as memory requirements due to the sparse and pre-defined nature of our binary filters, in comparison to dense learnable real-valued filters.
+
+\textbf{Related Work}
+The idea of using binary filters for convolutional layers is not new. BinaryConnect \cite{courbariaux2015binaryconnect} has been proposed to approximate the real-valued weights in neural networks with binary weights. Given any real-valued weight, it stochastically assigns +1 with probability p that is taken from the hard sigmoid output of the real-valued weight, and -1 with probability $1-p$. Weights are only binarized during the forward and backward propagation, but not during the parameter update step, in which high-precision real-valued weights are necessary for updating the weights. Therefore, BinaryConnect alternates between binarized and real-valued weights during the network training process. Building upon BinaryConnect \cite{courbariaux2015binaryconnect}, binarized neural network (BNN) and quantized neural network (QNN)  have been proposed, where both the weights and the activations are constrained to binary values. These approaches lead to drastic improvement in run-time efficiency by replacing most 32-bit floating point multiply-accumulations by 1-bit XNOR-count operations.
+
+\section{Forming LBP with Convolutional Filters}
+Local binary patterns (LBP) is a simple yet very powerful hand-designed descriptor for images rooted in the face recognition community. LBP has found wide adoption in many other computer vision, pattern recognition, and image processing applications \cite{pietikainen2011computer}.The traditional LBP operator  operates on image patches of size 3 $\times $3, 5 $\times $ 5, etc. The LBP descriptor is formed by sequentially compare the intensity of the neighboring pixels to that of the central pixel within the patch. Neighbors with higher intensity value, compared to the central pixel, are assigned a value of 1 and 0 otherwise. Finally, this bit string is read sequentially and mapped to a decimal number (using base 2) as the feature value assigned to the central pixel. These aggregate feature values characterize the local texture in the image. The LBP for the center pixel $\left( x_c,y_c\right)$ within a patch can be represented as LBP$\left( x_c,y_c\right)=\sum_{n=0}^{L-1}s\left( i_n,i_c\right) \times 2^n$ where $i^n$ denotes the intensity of the nth neighboring pixel, $i^c$ denotes the intensity of the central pixel, L is the length of the sequence, and $s\left(\cdot\right)=1$ if $i_n\geqslant i_c$ and $s\left(\cdot\right)=0$ otherwise. For example, a N $\times$ N neighborhood consists of $N^2-1$neighboring pixels and therefore results in a $N^2-1$ long bit string. Figure ~\ref{fig1} shows examples of LBP encoding for a local image patch of size 3 $\times$ 3 and 5 $\times$ 5.
+
+\begin{figure}
+  \centering
+  \includegraphics[scale=0.5]{1.png}\\
+  \caption{ (L-R) 3 $\times$ 3 patch and its LBP encoding, 5 $\times$ 5 patch and its LBP encoding.
+}\label{fig1}
+\end{figure}
+
+  {\small
+\bibliographystyle{ieee}
+\bibliography{CNN}
+}
+\end{document}
+
