@@ -1,0 +1,42 @@
+\documentclass[10pt,twocolumn,a4paper]{article}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx,float}
+\usepackage{indentfirst}
+\usepackage{balance}
+\usepackage{cite}
+\usepackage[pagebackref=true,breaklinks=true,colorlinks,bookmarks=false]{hyperref}
+\usepackage{geometry}
+\geometry{left=2.0cm,right=2.0cm,top=2.5cm,bottom=2.5cm}
+\setlength{\parindent}{1em}
+\title{\textbf{Learning from Synthetic Humans}}
+\author{Cheng Guan}
+\date{\today}
+\begin{document}
+\maketitle
+\section{\textbf{Introduction}}
+Convolutional Neural Networks provide signficant gains to problems with large amounts of training data. In the field of human analysis, recent datasets \cite{andriluka20142d,oliveira2016deep} now gather a sufficient number of annotated images to train networks for 2D human pose estimation \cite{okada2008relevant}. Other tasks such as accurate estimation of human motion, depth and body-part segmentation are lagging behind as manual supervision for such problems at large scale is prohibitively expensive. Images of people have rich variation in poses, clothing, hair styles, body shapes, occlusions, viewpoints, motion blur and other factors. Many of these variations, however, can be synthesized using existing 3D motion capture (MoCap) data  and modern tools for realistic rendering. Provided suf?cient realism, such an approach would be highly useful for many tasks as it can generate rich ground truth in terms of depth, motion, body-part segmentation and occlusions.
+\par
+Although synthetic data has been used for many years, realism has been limited. In this work we present SURREAL: a new large-scale dataset with syntheticallygenerated but realistic images of people. Images are rendered from 3D sequences of MoCap data. To ensure realism, the synthetic bodies are created using the SMPL body model , whose parameters are fit by the MoSh  method given raw 3D MoCap marker data. We randomly sample a large variety of viewpoints, clothing and lighting. SURREAL contains more than 6 million frames together with ground truth pose, depth maps, and segmentation masks. We show that CNNs trained on synthetic data allow for accurate human depth estimation and human part segmentation in real RGB images, see Figure ~\ref{fig1}. Here, we demonstrate that our dataset, while being synthetic, reaches the level of realism necessary to support training for multiple complex tasks. This opens up opportunities for training deep networks using graphics techniques available now. SURREAL dataset is publicly available together with the code to generate synthetic data and to train models for body part segmentation and depth estimation .
+\par
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[scale=0.4]{1.png}\\
+  \caption{We generate photo-realistic synthetic images and their corresponding ground truth for learning pixel-wise classification problems: human part segmentation and depth estimation. The convolutional neural network trained only on synthetic data generalizes to real images sufficiently for both tasks. Real test images in this figure are taken from MPII Human Pose dataset }
+  \label{fig1}
+\end{figure}
+
+\section{\textbf{Related Work}}
+Knowledge transfer from synthetic to real images has been recently studied with deep neural networks. Dosovitskiy \emph{et al} \cite{dosovitskiy2015flownet}.  learn a CNN for optical flow estimation using synthetically generated images of rendered 3D moving chairs. Peng \emph{et al}. \cite{peng2015learning} study the effect of different visual cues such as object/background texture and color when rendering synthetic 3D objects for object detection task. Similarly, explores rendering 3D objects to perform viewpoint estimation. Fanello  render synthetic infrared images of hands and faces to predict depth and parts. Recently, Gaidon  have released the Virtual KITTI dataset with synthetically generated videos of cars to study multi-object tracking.
+\par
+Several works focused on creating synthetic images of human bodies for learning 2D pose estimation , 3D pose estimation , pedestrian detection , and action recognition . Pishchulin  generate synthetic images with a game engine.  Some professors deform 2D images with a 3D model. More recently, Rogez and Schmid  use an image-based synthesis engine to augment existing real images. Ghezelghieh  render synthetic images with 10 simple body models with an emphasis on upright people; however, the main challenge using existing MoCap data for training is to generalize to poses that are not upright.
+\par
+The closest work to this paper is \cite{chen2016synthesizing}, where the authors render large-scale synthetic images for predicting 3D pose with CNNs. Our dataset differs from \cite{chen2016synthesizing} by having a richer, per-pixel ground truth, thus allowing to train for pixel-wise predictions and multi-task scenarios. In addition, we argue that the realism in our synthetic images is better , thus resulting in a smaller gap between features learned from synthetic and real images. The method in \cite{chen2016synthesizing} heavily relies on real images as input in their training with domain adaptation. This is not the case for our synthetic training. Moreover, we render video sequences which can be used for temporal modeling.
+
+{\small
+\bibliographystyle{ieee}
+\bibliography{SytheticHuman}
+}
+
+ \end{document}
