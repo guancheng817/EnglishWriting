@@ -1,0 +1,71 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx,float}
+\usepackage{indentfirst}
+\usepackage{balance}
+\usepackage{cite}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumerate}
+\usepackage[colorlinks,
+            linkcolor=red,
+            anchorcolor=blue,
+            citecolor=green
+            ]{hyperref}
+\usepackage{geometry}
+\usepackage{cvpr}
+\cvprfinalcopy
+\def\cvprPaperID{****} % *** Enter the CVPR Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+\geometry{left=2.0cm,right=2.0cm,top=2.5cm,bottom=2.5cm}
+\title{\textbf{Hybrid Deep Learning for Face Verification}}
+\author{Cheng Guan}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+This paper proposes a hybrid convolutional network (ConvNet)-Restricted Boltzmann Machine(RBM) model for face verification in wild conditions. A key contribution of this work is to directly learn relational visual features, which indicate identity similarities, from raw pixels of face pairs with a hybrid deep network. The deep ConvNets in our model mimic the primary visual cortex to jointly extract local relational visual features from two face images compared with the learned filter pairs. These relational features are further processed through multiple layers to extract high-level and global features.
+\end{abstract}
+\section{\textbf{Introduction}}
+Face recognition has been extensively studied in recent decades \cite{Framework2004,Linear2004,Atttibute2009}. This paper addresses the key challenge of computing the similarity of two face images given their large intra-personal variations in poses, illuminations, expressions, ages, makeups, and occlusions. It becomes more difficult when faces to be compared are acquired in the wild. We focus on the task of face verification, which aims to determine whether two face images belong to the same identity.
+\par
+Existing methods generally address the problem in two steps: feature extraction and recognition. In the feature extraction stage, a variety of hand-crafted features are used. Although some learning-based feature extraction approaches are proposed, their optimization targets are not directly related to face identity \cite{Face2010}. Therefore,the features extracted encode intra-personal variations. More importantly,existing approaches extract features from each image separately and compare them at later stages . Some important correlations between the two compared images have been lost at the feature extraction stage.
+\par
+All of the issues discussed above motivate us to learn a hybrid deep network to compute face similarities. A high-level illustration of our model is shown in Figure~\ref{fig1}. Our model has several unique features, as outlined below.
+\par
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[scale=0.5]{1.png}\\
+  \caption{The hybrid ConvNet-RBM model. Solid and hollow arrows show forward and back propagation directions}\label{fig1}
+\end{figure}
+\section{\textbf{Related Work}}
+All existing methods for face verification start by extracting features from two faces in comparison separately. A variety of low-level features are commonly used , including the hand-crafted features like LBP  and its variants \cite{Asscoiate2008}, SIFT , Gabor  and the learned LE features. Some methods generated midlevel features  with variants of convolutional deep belief networks (CDBN) or ConvNets . They are not learned with the supervision of identity matching. Thus variations other than identity are encoded in the features, such as poses, illumination, and expressions, which constitute the main impediment to face recognition.
+\par
+Many face recognition models are shallow structures, and need high-dimensional over-completed feature representations to learn the complex mappings from pairs of noisy features to face similarities ; otherwise, the models may suffer from inferior performance. Many methods  used linear SVM to make the same-ordifferent verification decisions.
+\section{\textbf{The hybrid ConvNet-RBM model }}
+\subsection{\textbf{Architecture overview}}
+We detect the two eye centers and mouth center with the facial point detection method proposed . Faces are aligned by similarity transformation according to the three points. Figure~\ref{fig2} is an overview of our hybrid ConvNet-RBM model,which is a cascade of deep ConvNet groups, two levels of average pooling, and Classification RBM.The lower part of our hybrid model contains 12 groups, each of which contains five ConvNets.The lower part of our hybrid model contains 12 groups, each of which contains five ConvNets. Figure~\ref{fig3} shows the structure of one ConvNet.
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[scale=0.5]{2.png}\\
+  \caption{Architecture of the hybrid ConvNet-RBM model. Neuron (or feature) number is marked beside each layer.}\label{fig2}
+\end{figure}
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[scale=0.4]{3.png}\\
+  \caption{The structure of one ConvNet. The map numbers and dimensions of the input layer and all the convolutional and max-pooling layers are illustrated as the length, width, and height of cuboids}\label{fig3}
+\end{figure}
+\subsection{\textbf{Deep ConvNets}}
+Our deep ConvNets contain four convolutional layers (followed by max-pooling). The operation in each convolutional layer can be expressed as
+\begin{equation}
+y_j^r = max\left(0,b_j^r+\sum_i k_{ij}^r \ast x_i^r \right)
+\end{equation}
+where $\ast$ denotes convolution, $x_i$ and $y_i$ are the \emph{i}-th input map and the \emph{j}-th output map respectively, $k_{ij}$ is the convolution kernel (filter) connecting the \emph{i}-th input map and the \emph{j}-th output map, and $b_j$ is the bias for the \emph{j}-th output map. $max\left(0,\cdot\right)$ is the non-linear activation function, and is operated element-wise.
+
+{\small
+\bibliographystyle{ieee}
+\bibliography{DL}
+}
+
+ \end{document}
