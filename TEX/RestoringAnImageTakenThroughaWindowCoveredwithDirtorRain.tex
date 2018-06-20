@@ -1,0 +1,69 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx,float}
+\usepackage{indentfirst}
+\usepackage{balance}
+\usepackage{cite}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumerate}
+\usepackage[colorlinks,
+            linkcolor=red,
+            anchorcolor=blue,
+            citecolor=green
+            ]{hyperref}
+\usepackage{geometry}
+\usepackage{cvpr}
+\cvprfinalcopy
+\def\cvprPaperID{****} % *** Enter the CVPR Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+\geometry{left=2.0cm,right=2.0cm,top=2.5cm,bottom=2.5cm}
+\title{\textbf{Restoring An Image Taken Through a Window Covered with Dirt or Rain}}
+\author{Cheng Guan}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+Photographs taken through a window are often compromised by dirt or rain present on the window surface. Common cases of this include pictures taken from inside a vehicle, or outdoor security cameras mounted inside a protective enclosure. At capture time, defocus can be used to remove the artifacts, but this relies on achieving a shallow depth-of-field and placement of the camera close to the window. Instead, we present a post-capture image processing solution that can remove localized rain and dirt artifacts from a single image. Wecollectadatasetofclean/corrupted image pairs which are then used to train a specialized form of convolutional neural network.
+\end{abstract}
+\section{Introduction}
+There are many situations in which images or video might be captured through a window. A person may be inside a car, train or building and wish to photograph the scene outside. Indoor situations include exhibits in museums displayed behind protective glass. Such scenarios have become increasingly common with the widespread use of smart phone cameras. Beyond consumer photography,many cameras are mounted outside, \emph{e.g.} on buildings for surveillance or on vehicles to prevent collisions. These cameras are protected from the elements by an enclosure with a transparent window.
+\par
+Such images are affected by many factors including reflections and attenuation. However,in this paper we address the particular situation where the window is covered with dirt or water drops, resulting from rain. As shown in Fig. ~\ref{fig1}, these artifacts significantly degrade the quality of the captured image.
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[scale=0.4]{1.png}
+  \caption{A photograph taken through a glass pane covered in rain, along with the output of our neural network model, trained to remove this type of corruption. Their regular size and appearance of the rain makes it difficult to remove with existing methods. This figure is best viewed in electronic form.
+}\label{fig1}
+\end{figure}
+\par
+The classic approach to removing occluders from an image is to defocus them to the point of invisibility at the time of capture. This requires placing the camera right up against the glass and using a large aperture to produce small depth of-field. However, in practice it can be hard to move the camera sufficiently close, and aperture control may not be available on smart phone cameras or webcams.
+\par
+In this paper we instead restore the image after capture, treating the dirt or rain as a structured form of image noise. Our method only relies on the artifacts being spatially compact, thus is aided by the rain/dirt being in focus - hence the shots need not be taken close to the window.
+\par
+Image denoising is a very well studied problem, with current approaches such as BM3D \cite{Image2012} approaching theoretical performance limits \cite{Natural2011}. However, the vast majority of this literature is concerned with additive white Gaussian noise, quite different to the image artifacts resulting from dirt or water drops.
+\subsection{Related Work}
+Learning-based methods have found widespread use in image denoising, \emph{e.g.} \cite{Space1997,Prior1997}. These approaches remove additive white Gaussian noise(AWGN) by building a generative model of clean image patches. In this paper, however, we focus on more complex structured corruption, and address it using an euralnet work that directly maps corrupt images to clean ones; this obviates the slow inference procedures used by most generative models.
+\par
+Neural networks have previously been explored for denoising natural images, mostly in the context of AWGN, e.g. Jain and Seung \cite{Natural2008}, and Zhang and Salari . Algorithmically, the closest work to ours is that of Burger \emph{et al.} \cite{Image2012},which applies a large neural network to arange of non-AWGN denoising tasks, such as salt-and-pepper noise and JPEG quantization artifacts.
+\section{Approach}
+To restore an image from a corrupt input, we predict a clean output using a specialized form of convolutional neural network . The same network architecture is used for all forms of corruption; however, a different network is trained for dirt and for rain. This allows the network to tailor its detection capabilities for each task.
+\subsection{Network Architecture}
+Given a noisy image \emph{x}, our goal is to predict a clean image \emph{y} that is close to the true clean image $y^{\ast}$. We accomplish this using a multilayer convolutional network, $y=F\left(x\right)$. Thenetwork $F$ is composed of a series of layers $F_l$, each of which applies a linear convolution to its input, followed by an element-wise sigmoid (implemented using hyperbolic tangent). Concretely, if the number of layers in the network is \emph{L}, then
+\begin{equation}
+F_0 \left(x\right)=x
+\end{equation}
+\begin{equation}
+F_l \left(x\right)= tanh\left(W_l \ast F_{l-1}\left(x\right)+b_l \right),l=1,2...L-1
+\end{equation}
+\begin{equation}
+F \left(x\right)= \frac{1}{m}\left(W_L \ast F_{L-1}\left(x\right)+b_L \right),l=1,2...L-1
+\end{equation}
+Here, \emph{x} is the RGB input image, of size $N \times M \times 3$. If $n_l$ is the output dimension at layer $l$, then Wl applies $n_l$ convolutions with kernels of size $p_l \times p_l \times n_{l-1}$, where pl is the spatial support. $b_l$ is a vector of size $n_l$ containing the output bias (the same bias is used at each spatial location).
+{\small
+\bibliographystyle{ieee}
+\bibliography{RI}
+}
+
+ \end{document}
