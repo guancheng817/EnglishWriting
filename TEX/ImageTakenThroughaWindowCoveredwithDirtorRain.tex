@@ -1,0 +1,71 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{times}
+\usepackage{stfloats}
+\usepackage[pagebackref=true,colorlinks,linkcolor=red,citecolor=green,breaklinks=true,bookmarks=false]{hyperref}
+\cvprfinalcopy % *** Uncomment this line for the final submission
+\def\cvprPaperID{****} % *** Enter the CVPR Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+\title{Restoring An Image Taken Through a Window Covered with Dirt or Rain}
+\author{Cheng Guan\\\\
+Jun 22, 2018}
+
+\begin{document}
+\maketitle
+\section{Training Data Collection}
+Today I continue the last learning and learn the rest of the section,including collect the training data,baseline methods and experiments. From the paper,I can know the network has 753,664 weights and 1,216 biases which need to be set during training. This requires a large number of training patches to avoid over-fitting. The authors describe the procedures used to gather the corrupted/clean patch pairs used to train each of the dirt and rain models.
+\subsection{Dirt}
+In order to train the network to remove dirt noise, the authors generated clean/noisy image pairs by synthesizing dirt on images. Similarly to \cite{gu2009removing}, the author also found that dirt noise was well-modeled by an opacity mask and additive component, which we extract from real dirt-on-glass panes in a lab setup. Once the authors have the masks, They generate noisy images according to Eq.\ref{eq1}.
+\begin{equation}
+I^{\prime} = p\alpha D + \left(1-\alpha \right)I
+\label{eq1}
+\end{equation}
+In this section,here, $I$ and $I^{\prime}$ are the original clean and generated noisy image, respectively. $\alpha$ is a transparency mask the same size as the image, and $D$ is the additive component of the dirt, also the same size as the image. $p$ is a random perturbation vector in RGB space, and the factors $p\alpha D$  are multiplied together element-wise. $p$ is drawn from a uniform distribution over (0.9, 1.1) for each of red, green and blue, then multiplied by another random number between 0 and 1 to vary brightness. These random perturbations are necessary to capture natural variation in the corruption and make the network robust to these changes.
+\par
+To find $\alpha$ and $\alpha D$, the authors took pictures of several slide-projected backgrounds, both with and without a dirt-on-glass pane placed in front of the camera. the authors then solved a linear least-squares system for $\alpha$ and $\alpha D$ at each pixel; further details are included in the supplementary material.
+\subsection{Water Droplets}
+In this section,unlike the dirt, water droplets refract light around them and are not well described by a simple additive model. The authors considered using the more sophisticated rendering model , but accurately simulating outdoor illumination made this inviable. Thus, instead of synthesizing the effects of water, the authors built a training set by taking photographs of multiple scenes with and without the corruption present. For corrupt images,the authors simulated the effect of rain on a window by spraying water on a pane of anti-reflective MgF$_2$-coated glass, taking care to produce drops that closely resemble real rain. To limit motion differences between clean and rainy shots,all scenes contained only static objects. Further details are provided in the supplementary material.
+\section{Baseline Methods}
+The authors compare our convolutional network against a nonconvolutional patch-level network similar to \cite{burger2012image}, as well as three baseline approaches: median filtering, bilateral filtering \cite{paris2006fast,tomasi1998bilateral}, and BM3D \cite{burger2012image}. In each case, we tuned the algorithm parameters to yield the best qualitative performance in terms of visibly reducing noise while keeping clean parts of the image intact. On the dirt images, we used an 8$\times$8 window for the median filter, parameters  $\sigma_s = 3$ and $\sigma_r = 0.3$ for the bilateral filter, and $¦Ò =0 .15$ for BM3D. For the rain images, the authors used similar parameters, but adjusted for the fact that the images were downsampled by half: 5$\times$5 for the median filter, $\sigma_s =2$ and $\sigma_r = 0.3$ for the bilateral filter, and $¦Ò =0.15$ for BM3D.
+\section{Experiments}
+\subsection{Dirt}
+The authors tested dirt removal by running our network on pictures of various scenes taken behind dirt-on-glass panes. Both the scenes and glass panes were not present in the training set, ensuring that the network did not simply memorize and match exact patterns. We tested restoration of both real and synthetic corruption. Although the training set was composed entirely of synthetic dirt,it was representative enough for the network to perform well in both cases.
+\subsubsection{Synthetic Dirt Results}
+The authors first measure quantitative performance using synthetic dirt. The results are shown in Table \ref{tb1}. Our convolutional network substantially outperforms its patch-based counterpart. Both neural networks are much better than the three baselines,which do not make use of the structure in the corruption that the networks learn.
+\begin{table}
+  \small
+  \begin{center}
+  \begin{tabular}{|c|c|c|c|c|c|}
+  \hline
+  \textbf{PSNR} & Input & Ours & Nonconv & Median &Bilateral \\
+  \hline
+  \hline
+  Mean & 28.93 & 35.43 & 34.52 & 31.47 &29.97 \\
+  Std.Dev. &0.93 & 1.24 & 1.04 & 1.45 & 1.18 \\
+  Gain & - & 6.50 & 5.59 & 2.53 & 1.04 \\
+  \hline
+  \end{tabular}
+  \end{center}
+  \caption{PSNR for our convolutional neural network, nonconvolutional patch-based network, and baselines on a synthetically generated test set of 16 image}
+  \label{tb1}
+\end{table}
+The authors also applied their network to two types of artificial noise absent from the training set: synthetic ``snow'' made from small white line segments, and ``scratches'' of random cubic splines. An example region is shown in Fig.~\ref{fig1}. In contrast to the gain of +6.50 dB for dirt, the network leaves these corruptions largely intact, producing near-zero PSNR gains of -0.10 and +0.30 dB, respectively, over the same set of images. This demonstrates that the network learns to remove dirt specifically.
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=1\linewidth]{1.png}\\
+  \caption{Our dirt-removal network applied to an image with first column
+no corruption, second column synthetic dirt, third column artificial ``snow'' and fourth column random ``scratches'' .}\label{fig1}
+\end{figure}
+
+
+{\small
+\bibliographystyle{ieee}
+\bibliography{DL}
+}
+
+ \end{document}
