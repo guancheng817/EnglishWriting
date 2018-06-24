@@ -1,0 +1,61 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{times}
+\usepackage{stfloats}
+\usepackage[pagebackref=true,colorlinks,linkcolor=red,citecolor=green,breaklinks=true,bookmarks=false]{hyperref}
+\cvprfinalcopy 
+\def\cvprPaperID{****} % *** Enter the CVPR Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+
+\title{Fast and Accurate Image Matching with Cascade Hashing for 3D Reconstruction}
+\author{Cheng Guan\\\\
+Jun 24, 2018}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+As we know,Image matching is one of the most challenging stages in 3D reconstruction. It usually takes up half of the computation cost, and inaccurate matching may lead to failure. Therefore, we need fast and accurate image matching for 3D reconstruction. The authors of this paper proposes a cascaded hash algorithm to speed up image matching. In order to speed up image matching, the cascaded hash method proposed is designed to be a three level structure, which is hash lookup, hash remapping and hash ranking.
+\end{abstract}
+
+\section{Introduction}
+In the field of computer vision, 3D reconstruction is a classic and challenging problem. It should be used in different fields. In recent years, large-scale 3D reconstruction from community photo collection has become a new research topic, attracting more and more researchers. Researchers at home and abroad. However, 3D reconstruction is a huge computational cost. For example, it takes more than a day to rebuild an object with only one thousand pictures on a machine.
+In the Structure from Motion (SfM) model\cite{agarwal2011building,crandall2011discrete}.The 3D reconstruction pipeline can be divided into several steps: feature extraction, image matching, trajectory generation and geometric estimation. Among them, image matching occupies the major computational cost, and even exceeds half of it in some cases. In addition, inaccurate matching results may lead to reconstruction failure. Therefore, fast and accurate image matching is the key to 3D reconstruction.
+\par
+Image matching techniques can be roughly divided into three categories: point matching, line matching and region matching. Because of its robustness to illumination change, affine transformation and view change, point matching has been widely paid attention, and many affective algorithms have been paid more attention over the past few decades \cite{bay2008speeded,lowe2004distinctive}. However,point matching is usually very time consuming. For pairwise image matching ,the computational complex of exhaustively comparing all feature points in two images is $O\left(N^2\right)$, where $N$ is the average number of feature points in each image.
+\section{The Proposed Approach}
+In this paper, the authors propose a Cascade Hashing structure, named CasHash, to speed up image matching for 3D reconstruction. In their method, a simple hashing algorithm, Locality Sensitive Hashing (LSH), is adopted to generate binary code (refer to Fig.~\ref{fig1}). Consequently, the following is  a brief introduction to LSH algorithm.
+\begin{figure}[t]
+  \centering
+  \includegraphics[scale=0.5]{1.png}\\
+  \caption{Locality Sensitive Hashing}\label{fig1}
+\end{figure}
+
+\subsection{Locality Sensitive Hashing}
+Let $X = \left \{ x_1,x_2,...,x_n\right \}$ be a set of data points,where $x_i \in \mathbb{R}^d$. Given a query vector $q$, In order to find the most similar items in $X$ to the query. LSH is perhaps the most well known hashing based ANN search scheme, which relies on the existence of locality sensitive hashing functions. Assume $\gamma$ be a family of hashing functions mapping $\mathbb{R}^d$ to Hamming space $\mathbb{B}$. For any two points $x$ and $y$, it chooses a function $h$ from $\gamma$  uniformly at random and is confined to the probability $h\left( x \right) = h\left( y \right)$. The function family $\gamma$ is locality sensitive if it satisfies the following conditions: A family $\gamma$ of functions from $\mathbb{R}^d$ to $\mathbb{B}$ is called $(R,cR,P_1,P_2)$-sensitive for $D\left(.,.\right)$ if for any $ x,y \in \mathbb{R}^d$ in Eq.\ref{eq1} and Eq.\ref{eq2}.
+\begin{equation}
+Pr_{h \in \gamma}\left(h\left(x \right)\right) \geq P_1,D\left(x,y\right) \leq R
+\label{eq1}
+\end{equation}
+\begin{equation}
+Pr_{h \in \gamma}\left(h\left (x \right)\right) \leq P_2,D\left(x,y\right) \geq cR
+\label{eq2}
+\end{equation}
+\par
+where $D\left(.,.\right)$ is a distance function in the original space
+$\mathbb{R}^d$. Obviously, a family $\gamma$ is valid only when $c > 1$, and
+$P_1 > P_2$. Given valid LSH functions, Gionis  proved
+that the query time for retrieving $\left(1+\epsilon\right)$-near neighbors is
+bounded by $O\left(n^{\frac{1}{1+\epsilon}}\right)$ for Hamming distance \cite{gionis1999similarity}.
+
+{\small
+\bibliographystyle{ieee}
+\bibliography{FA}
+}
+
+ \end{document}
