@@ -1,0 +1,51 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{times}
+\usepackage{stfloats}
+\usepackage[pagebackref=true,colorlinks,linkcolor=red,citecolor=green,breaklinks=true,bookmarks=false]{hyperref}
+\cvprfinalcopy
+\def\cvprPaperID{****} 
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+
+\title{Fast and Accurate Image Matching with Cascade Hashing for 3D Reconstruction}
+\author{Cheng Guan\\\\
+Jun 30, 2018}
+
+\begin{document}
+\maketitle
+\section{Elements of the Comparison}
+Last time, I learn the main introduction of the paper. Today I read the paper deeply.The authors use statitis of 7 datasets (5 for scenes and 2 for objects) here to describe  the Fig.~\ref{fig1}, followed by their model evaluation part. See supplementay for details on human data gathering protocols on datasets.
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[scale=0.4]{1.png}\\
+  \caption{Sample images from scene and object datasets used in this study}
+  \label{fig1}
+\end{figure}
+\subsection{Human Studies}
+\noindent \textbf{6-CAT:}\cite{2011Simple} includes 3,866 color photographs: beaches (553), city (648), forest (730), highway (563), mountain (720), and offices (652) with resolution of $800 \times 600$ pixels. Line drawings of about 80 images per category (475 total) were taken from a small part of the Lotus Hill Dataset, onto which contours were traced by trained artists.
+\par
+\noindent \textbf{15-CAT:}\cite{2006Finding} contains 4,578 gray-level images of size about $300 \times 200$ including coast(360), forest(328), highway (260), mountain (374), street (392), tall buildings (356), bedroom (216), kitchen (210), street (292), tall buildings (356), inside city (308), open country (410 images), suburb (241),industrial (311), living room (289), industry (308), and store (315). The first 8 categories were called the 8-CAT dataset.
+\par
+\noindent \textbf{SUN:}\cite{Xiao2010SUN} is an extensive scene database containing 899 categories and 130,519 images. The authors experiment with 397 well-sampled categories to evaluate state-of-the-art algorithms and their accuracy versus humans.
+\par
+\noindent \textbf{Animals:}\cite{Serre2007A} contains 600 target images($256 \times 256$ pixels; 150 \emph{close body}, 150 \emph{far body}, 150 \emph{head}, and 150 \emph{medium body}) and 600 distractors. The advantage of the data set is that it provides the accuracy of the on $90^{\circ}$ and $180^{\circ}$ rotated image and allows the invariance analysis of the model.
+\par
+\noindent \textbf{Jumbled images:}\cite{2011Recognizing} Humans can recognize jumbled images as those in Fig.~\ref{fig1}, $4^{th}$ row. Indeed, Parikh\cite{2011Recognizing} showed a a majority-vote accumulation over human classification of the individual blocks is a good predictor of human responses of the entire jumbled images.
+\par
+\noindent \textbf{Caltech-256:}\cite{Griffin2007Caltech} This dataset, one of the most challenging dataset of object recognition, some shortcomings of CalTeC10-101 data set are corrected by introducing different lighting conditions, poses, background, size and camera systematics.
+\par
+\noindent \textbf{Sketch images:}\cite{Humans2012} This dataset contains non-expert sketches of everyday objects such as teapot or car. There are 20,000 unique sketches evenly distributed over 250 categories (\emph{i.e.}, 80 images per category). 
+In perceptual research, humans can correctly identify the object category 73.1\% of time (chance is 0.4\%). Given a random sketch, participants are asked to select the best fitting category from the set of 250 object categories.
+\par
+
+{\small
+\bibliographystyle{ieee}
+\bibliography{FA}
+}
+
+ \end{document}
