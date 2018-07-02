@@ -1,0 +1,47 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{times}
+\usepackage{stfloats}
+\usepackage[pagebackref=true,colorlinks,linkcolor=red,citecolor=green,breaklinks=true,bookmarks=false]{hyperref}
+\cvprfinalcopy
+\def\cvprPaperID{****} % *** Enter the CVPR Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+
+\title{Look at the Driver, Look at the Road: No Distraction! No Accident!}
+\author{Cheng Guan\\\\
+July 2, 2018}
+\begin{document}
+\maketitle
+\begin{abstract}
+In this paper,the authors propose an advanced driver-assistance system that simultaneously analyzes the driver's head posture and road hazard. In particular, the author's goal is to prevent driver fatigue or distractions from rear-end accidents. They contributed through three novel ideas: asymmetrical appearance modeling, enhanced 2D to 3D pose estimation from the introduced Fermat point transformation, and Global Haar for vehicle inspection under challenging lighting conditions (GHaar) Adaptability of the classifier for vehicle detection under challenging lighting conditions. The system defines the driver¡¯s direction of attention (in 6 degrees of freedom), yawning and head-nodding detection, as well as vehicle detection, and distance estimation.
+\end{abstract}
+\section{Introduction}
+The advanced driver-assistance systems (ADAS) are the current goal in the field of computer vision, especially in the center of the automotive industry. A real-world ADAS needs to understand the driver¡¯s behavior (\emph{e.g.}, by analyzing facial features, or by steering-wheel motion analysis).Face detection \cite{zhu2012face}is still difficult for extreme head poses or challenging lighting conditions. The system also needs to detect potential hazards on the road.The system also needs to detect potential hazards on the road. Simultaneous ``driver'' and ``road'' monitoring requires object detection, pose tracking, and data fusion \cite{rezaei2011simultaneous}.
+\par
+First, the authors propose a comprehensive solution for detecting adriver¡¯s direction of attention, yawning, and head nodding. The method is based on the novel ideas of asymmetric appearance modelling (ASAM), and the Fermat-point transform. Then They combine the introduced method for driver monitoring with road monitoring(\emph{i.e.},vehicle detection and distance estimation). The system finally analyses the correlation between a driver¡¯s head pose with potential road hazards, in order to prevent imminent crashes at early stages.
+\par
+Using monocular vision only, they keep the system at low computational costs; yet they compete with the state-of-theart. To the best of our knowledge, no previous research has jointly addressed all of the above mentioned subjects as one integrated real-time solution.
+\par
+The authors provide techniques for two important challenges that have rarely been addressed so far: (A) Dealing with intensity asymmetry and unbiased illumination for the same object, such as a driver¡¯s face (Fig.~\ref{fig1}, right), and (B) Mapping a generic rigid 3-D face model onto deformable faces.
+\begin{figure}[t]
+  \centering
+  \includegraphics[scale=0.5]{1.png}\\
+  \caption{64 keypoint landmarks (left). Symmetric Delauney triangulation (middle). Asymmetric intensity variations (right).}
+  \label{fig1}
+\end{figure}
+
+\section{Related Work}
+Xie \emph{et al.}\cite{xie2012driver} propose driver-fatigue detection using the \emph{active appearance model} (AAM), as introduced by Cootes \cite{cootes2001active}, by fitting it to the eye region, followed by head pose detection depending on the face-centroid.This method seems too basic and does not apply to highly-dynamic real-world scenarios.
+\par
+Mosquera and Castro \cite{teijeiro2011recursive} use a recursive algorithm to improve convergence accuracy when modeling a driver¡¯s face. Results show improvements compared to Cootes¡¯ AAM method \cite{cootes2001active}; however, a driver¡¯s facial features are not yet taken into account.
+
+{\small
+\bibliographystyle{ieee}
+\bibliography{LD}
+}
+\end{document}
