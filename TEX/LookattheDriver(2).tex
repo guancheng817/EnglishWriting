@@ -1,0 +1,61 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{times}
+\usepackage{stfloats}
+\usepackage[pagebackref=true,colorlinks,linkcolor=red,citecolor=green,breaklinks=true,bookmarks=false]{hyperref}
+\cvprfinalcopy
+\def\cvprPaperID{****} % *** Enter the CVPR Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+\title{Look at the Driver, Look at the Road: No Distraction! No Accident!}
+\author{Cheng Guan\\\\
+July 4, 2018}
+\begin{document}
+\maketitle
+\section{Asymmetric Appearance Models}
+In this section, the authors introduce the \emph{Appearance models} (AM).
+originally introduced by Cootes\emph{et al.} \cite{cootes2001active}, is widely used for object modeling, especially in the context of facial processing. Many research efforts have solved this as an optimization problem to find improved fitting algorithms and reduce matching errors.
+\subsection{Implementation}
+AM combines a shape model and a texture model. To define the face AM, the author needs to train changes in face shape (as a shape model) and face intensities (as a texture model).
+\par
+Considering 64 point-landmarks, as illustrated in Fig.~\ref{fig1}, right, and using the MUCT face dataset \cite{milborrow2010muct}, the authors create an annotated face dataset in order to train a generic face-shape model. Following the standard AM approach \cite{cootes2001active}, and applying a uniform coordinate system, annotated faces are represented by a vector $f = {\left[x_0,y_0,...,x_i,y_i\right]}^\top$. A face shape model is defined as Eq.\ref{eq1}:
+\begin{equation}
+f = \bar{f} + P_{s}b_{si}
+\label{eq1}
+\end{equation}
+\begin{figure}[t]
+  \centering
+  \includegraphics[scale=0.5]{1.png}\\
+  \caption{64 key point landmarks (left). Symmetric Delauney triangulation (middle). Asymmetric intensity variations (right).}
+  \label{fig1}
+\end{figure}where $\bar{f}$ is the mean face shape applying \emph{principal component analysis} (PCA) on the available face data, $P_s$ is an orthogonal matrix of face-shape variations, and $b_s$ is a vector of face-shape parameters (given in distance units). By applying a translation $\left(t_x,t_y\right)$, and a rotation and scaling $\left(s_x = s\cdot\cos\theta-1,s_y=s\cdot\sin\theta\right)$, each sample face is warped into the mean shape model, thus creating a new face $F$. Let $F=S_t\left(f\right)$ be this warped image, where $S_t$ is the warping function, and $t = {\left[s_x,s_y,t_x,t_y\right]}^\top$ is the pose parameter vector. Fig.~\ref{fig2}  illustrates the steps for creating the \emph{appearance face model} based on only two sample faces. The second row of Fig.~\ref{fig2} shows examples of shape variations with different deformation parameters applied to each sample face.
+\begin{figure}[t]
+  \centering
+  \includegraphics[scale=0.4]{2.png}\\
+  \caption{Conversion of face shape and face texture models of two sample faces into a mean appearance model.}
+  \label{fig2}
+\end{figure}
+\par
+To create a face texture (intensity) model, first a symmetric Delaunay triangulation is applied to shape-feature points, for each sample face (Fig.~\ref{fig1}, middle). Considering g as a texture vector of a sample face image, similar to the shape-warping stage, the authors have a mapping $g\rightarrow g^{\ast}$, where $g^{\ast}$ is generated after scaling and adding an offset to current intensity $g$. This way they create a shape-free ``intensity patch'' for each sample face given in the training dataset. This is done by raster scanning of the texture vector $g$, and a linear normalization of $g$ for every half of the face as Eq.\ref{eq2}:
+\begin{equation}
+g_L^{\ast}=\frac{g_L-\mu_L \cdot \bf{1}}{\sigma_L},g_R^{\ast}=\frac{g_R-\mu_R \cdot \bf{1}}{\sigma_L}
+\label{eq2}
+\end{equation}
+where $\mu_L$, $\mu_R$ and $\sigma_L^2$, $\sigma_L^2$ are means and variances for the left and right part of the face-intensity patch, $g_L, g_R$ are the left and right half of the $g$ vector, $g_L^\ast, g_R^\ast$ are normalized data, and $\bf{1}$ is a vector of ones.
+\par
+Similarly,by applyinga PCA to the normalized intensity data, a face intensity-model is estimated as Eq.\ref{eq3}:
+\begin{equation}
+g_L=\bar{g_L^\ast}+P_{gL}b_{gL},g_R=\bar{g_R^\ast}+P_{gR}b_{gR}
+\label{eq3}
+\end{equation}
+where $\bar{g^\ast}$is the mean vector of normalized gray-level or intensity data, $P_g$ is an orthogonal matrix of texture-modes of variations,and $b_g$ is a vector of intensity parameters in gray level units (Fig.~\ref{fig2}, third row). The authors apply this as individual processes for each half of the face.
+
+{\small
+\bibliographystyle{ieee}
+\bibliography{LD}
+}
+\end{document}
