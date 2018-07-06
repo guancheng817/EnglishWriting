@@ -1,0 +1,97 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{times}
+\usepackage{stfloats}
+\usepackage[pagebackref=true,colorlinks,linkcolor=red,citecolor=green,breaklinks=true,bookmarks=false]{hyperref}
+\cvprfinalcopy
+\def\cvprPaperID{****} % *** Enter the CVPR Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+\title{Face Recognition vi a Archetype Hull Ranking}
+\author{Cheng Guan\\\\
+July 6, 2018}
+\begin{document}
+\maketitle
+\begin{abstract}
+In the recent years, the archetype hull model is playing an important role in
+large-scale data analytics and mining, but rarely applied to
+vision problems. In this paper, the authors migrated this geometric model together to solve face recognition and verification problems.
+By proposing a unified prototype hull ranking framework.
+Upon a scalable graph characterized by a compact
+set of archetype exemplars whose convex hull encompasses
+most of the training images, the proposed framework explicitly
+captures the relevance between any query and the
+stored archetypes, yielding a rank vector over the archetype
+hull.
+\end{abstract}
+\section{Introduction}
+The main purpose of facial analysis is to calculate robustness and effectiveness
+A measure of similarity between any input facial image pairs. Such a measure is
+expected to suppress intra-personal face variations due to varying expressions,
+poses, and illumination conditions. Today, fast-growing facial image resources from online photo albums and social networks offer new opportunities
+At the same time, it presents new challenges to existing facial treatment methods. How can they take advantage of the
+gigantic amount of face information on the Web? One feasible
+approach is to upgrade current face processing systems
+by augmenting web-crawled face images into their training
+datasets, which therefore requires the face systems to be
+easy for re-training and scalable to accommodate massive
+web data. 
+\par
+In pursuit of scalability, the authors used a small part
+archetype exemplars to represent a lot of facial training
+image. These archetypes form a convex shell
+Contains most faces in the training set. To the best of
+our knowledge, the archetype hull model has not been applied
+to the face area. 
+The use of archetypes along with
+the produced archetype hull may open a new avenue to
+make traditional facial processing methods extendable to
+Large-scale face datasets. To illustrate, Fig.~\ref{fig1} showcases face
+archetypes and an archetype hull to model face images. In
+this paper, they seek such archetypes using an efficient simplex
+volume maximization algorithm. Subsequently, they
+build a scalable graph by virtue of the archetypes whose
+size is much smaller than the training data size.
+\begin{figure}
+  \centering
+  \includegraphics[scale=0.5]{1.png}\\
+  \caption{One visual example showcasing an archetype hull of face
+images. They view face images as points in the image space, where
+the polytope composed of a few archetype faces encloses almost
+all points. Any point can be represented by a convex combination
+of the archetypes, and these archetypes hence form a convex hull
+of the entire point set.}\label{fig1}
+\end{figure}
+
+\section{Related Work}
+In the face recognition literature, a large number of subspace
+methods \cite{belhumeur1996eigenfaces,moghaddam2000bayesian,wang2004dual,wang2004unified,li2005nonparametric} working
+on holistic facial features have been proposed. Recently, local
+facial descriptors \cite{ahonen2006face} achieved greater accuracy
+gains on many benchmark datasets. The local descriptors
+attempt to extract distinctive features of image textures like local micro-patterns of face shapes like LBP
+\cite{ahonen2006face}. However, intra-personal variations caused by varying
+expressions, poses, and illumination conditions remain a
+potential obstacle to these appearance-based methods.
+As mentioned before, one of the major challenges of
+modern face recognition is the explosive growth of face data.
+Some efficient learning methods could provide promising
+solutions. For example, the LARK method \cite{lowe2004distinctive} developed
+a special kind of features to obtain a training free classifier.
+Lately, a scalable neighborhood graph, Anchor Graph
+, was proposed to accommodate massive training samples,
+and has shown excellent performance in large-scale
+semi-supervised learning  and image retrieval . In
+this paper, the authors employ the Anchor Graph model to deal with
+large quantities of face images since it scales linearly with
+the training set size in terms of both space and time complexities.
+
+{\small
+\bibliographystyle{ieee}
+\bibliography{FR}
+}
+\end{document}
