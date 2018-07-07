@@ -1,0 +1,139 @@
+\documentclass[a4paper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{fullpage}
+\usepackage{amsmath}
+\usepackage{subfigure}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[pagebackref=true,colorlinks,linkcolor=red,citecolor=green,breaklinks=true,bookmarks=false]{hyperref}
+\usepackage{amssymb}
+\usepackage{outline} \usepackage{pmgraph} \usepackage[normalem]{ulem}
+\usepackage{graphicx} \usepackage{verbatim}
+\usepackage{url}
+\usepackage{indentfirst}
+\setlength{\parindent}{2em}
+% \usepackage{minted} % need `-shell-escape' argument for local compile
+
+\title{
+    \vspace*{1in}
+    \includegraphics[width=2.75in]{zhenglab-logo} \\
+    \vspace*{1.2in}
+    \textbf{\huge Deep Learning}
+    \vspace{0.2in}
+}
+
+\author{Cheng Guan \\
+    \vspace*{0.5in} \\
+    \textbf{VISION@OUC}\\
+    \vspace*{1in}
+}
+
+\date{\today}
+\begin{document}
+\maketitle
+\setcounter{page}{0}
+\thispagestyle{empty}
+\newpage
+\section{What is Neural Network}
+From this week, I begin to learn the Deep Learning introduced by Andrew Ng. As we know ,Neural Network is a powerful learning algorithm inspired by how the brain works \cite{deep}. In information technology, a neural network is a system of hardware and software patterned after the operation of neurons in the human brain. Neural networks -- also called artificial neural networks -- are a variety of deep learning technologies.
+\subsection{Single Neural Network}
+Andrew Ng introduced a single neural network. Given the data on the size of the housing market in the real estate market, we hope to be able to find the function of predicting its price. This is a linear regression problem because the price as a function of size is a continuous output.
+\par
+Because we know that the prices can never be negative ,we make the line end up at zero. We create a function called Rectified Linear Unit(ReLU) which starts at zero as shown in Fig.~\ref{fig1}. The input is the size of the house$\left(x\right)$, the output is the price$\left(y\right)$, the ``neuron'' implements the function ReLU (blue line).
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]{1(b).png}
+	\caption{Housing price prediction}
+	\label{fig1}
+\end{figure}
+\subsection{Multiple Neural Network}
+The price of a house can be affected by other features such as size, location,
+number of bedrooms and wealth. The role of the neural network is to
+predicted the price and it will automatically generate the hidden units. We only
+need to give the inputs $x$ and the output $y$ as shown in Fig.~\ref{fig2}.
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.5]{2.png}\\
+  \caption{Housing price prediction}
+  \label{fig2}
+\end{figure}
+\section{Supervised Learning for Neural Network}
+In supervised learning,  given a data set and already know what our correct output should look like, having the idea that there is a relationship between the input and the output.
+\par
+
+Supervised learning problems are divided into ``regression'' and ``classification'' issues. In a Regression problem, we try to predict the result in continuous output, which means we try to map input variables into some continuous functions. In the classification problem, we try to predict the result in discrete output. In other words, we are trying to map input variables to discrete categories.
+\par
+Here are some examples of supervised learning in Table.\ref{tb1}.
+\begin{table}[htbp]
+  \centering
+  \begin{tabular}{|c|c|c|}
+  \hline
+  Input$\left(x\right)$ & Output$\left(y\right)$ & Application\\
+  \hline
+  \hline
+  Home features & Price & Real Estate\\
+  Ad, user info & Click on ad? & Online Advertising\\
+  Image & Object(1,...,1000) & Photo tagging\\
+  Audio & Text transcript & Speech recognition\\
+  English & Chinese & Machine translation\\
+  Image,Radar info & Position of other cars&Autonomous driving\\
+  \hline
+  \end{tabular}
+  \caption{examples of supervised}\label{tb1}
+\end{table}
+\par
+I learn that there are different types of neural networks, such as convolutional neural networks (CNN), often used for image applications and Recurrent Neural Networks (RNN) for one-dimensional sequence data, such as translating English into Chinese or time components such as text transcripts. . As for autonomous driving, it is a hybrid neural network architecture.
+\par
+There are two kinds of data type, they are structured data and unstructured data. Structured data  has a defined meaning such as price, age and so on. However,  unstructured data is something like pixel, raw audio, text and so on, as shown in Fig.~\ref{fig6}.
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[scale=0.4]{data.png}\\
+  \caption{Housing price prediction}\label{fig6}
+\end{figure}
+\section{Binary Classification}
+In a binary classification problem, the result is a discrete value output.
+\subsection{Cat vs Non-Cat}
+The goal is to train a classifier that the input is an image represented by a feature vector, $x$, and predicts whether the corresponding label $y$ is 1 or 0. In this case, whether this is a cat image (1) or a non-cat image (0).
+\par
+An image is store in the computer in three separate matrices corresponding to the Red, Green, and Blue color channels of the image as shown in Fig.~\ref{fig3}. The three matrices have the same size as the image, for example, the resolution of the cat image is 64 pixels $\times$ 64 pixels, the three matrices (RGB) are 64 $\times$ 64 each.
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.4]{3.png}\\
+  \caption{RGB channels}\label{fig3}
+\end{figure}
+The value in a cell represents the pixel intensity which will be used to create a feature vector of ndimension. In pattern recognition and machine learning, a feature vector represents an object, in this case, a cat or no cat.
+\par
+To create a feature vector, $x$, as shown in Fig.~\ref{fig4} the pixel intensity values will be ``unroll'' or ``reshape'' for each color. The dimension of the input feature vector $x$ is $n_x = 64 \times 64 \times 64 \times 3 = 12,288$
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[scale=0.4]{4.png}\\
+  \caption{feature vector $x$}\label{fig4}
+\end{figure}
+\section{Logistic Regression}
+Logistic regression is a learning algorithm used in a supervised learning
+problem when the output $y$ are all either 0 or 1. The goal of logistic regression
+is to minimize the error between its prediction and training data.Given an image
+represented by a feature vector $x$, the algorithms will evaluate the probability
+of a cat being in that image.
+\begin{equation}
+Given \ x, \hat{y}=P\left(y=1|x\right),where \ 0\leq\hat{y}\leq1
+\end{equation}
+\par
+The parameters used in Logistic regression are:
+\begin{itemize}
+  \item The input features vector: $x \in \mathbb{R}^{n_x}$, where $n_x$ is the number of features
+  \item The training label: $y\in\left(0,1\right)$
+  \item The weights: $w\in \mathbb{R}^{n_x}$, where $n_x$ is the number of features
+  \item The threshold: $b \in \mathbb{R}$
+  \item The output: $\hat{y}=\sigma\left(w^\mathrm{T}+b\right)$
+  \item Sigmoid function: $s = \sigma\left(w^\mathrm{T}+b\right)=\sigma\left(z\right) = \frac{1}{1+e^{-z}}$
+\end{itemize}
+
+
+% If you don't cite any references, please comment the following two lines
+\bibliographystyle{ieee}
+\bibliography{ref}
+
+\end{document}
