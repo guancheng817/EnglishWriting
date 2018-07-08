@@ -1,0 +1,79 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{times}
+\usepackage{stfloats}
+\usepackage[pagebackref=true,colorlinks,linkcolor=red,citecolor=green,breaklinks=true,bookmarks=false]{hyperref}
+\cvprfinalcopy
+\def\cvprPaperID{****} % *** Enter the CVPR Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+\title{Look at the Driver, Look at the Road: No Distraction! No Accident!}
+\author{Cheng Guan\\\\
+July 8, 2018}
+\begin{document}
+\maketitle
+\section{Archetypes and Archetype Hull}
+According to this paper, I know that archetype was originally called psychology \cite{jung2014archetypes} and was used to describe a very typical and generally understood paradigm of a set of objects. Prototype analysis aims to find a compact ``pure type'', \emph{i.e.}, the so-called archetypes, Thus, the typical pattern of this set of objects is covered in the archetypes, while the other objects are just a combination of simulations or archetypes.
+\subsection{Concept of Archetypes}
+The concept of archetypes actually is not far away from us, which exists in a variety of
+subjects including literature, philosophy, and psychology
+marketing \cite{li2003archetypal} and statistics\cite{eugster2011weighted}. The idea of archetypes is
+recently introduced into pattern recognition and informatics
+\cite{thurau2010yes,seiler2013archetypal}. Understanding the concept of archetypes
+in face recognition is intuitive: people can easily remember
+someone with a very distinctive facial appearance; some
+people are thought of being very similar to a few distinctive
+faces. Such phenomena serve as the evidence of identifying
+archetypes and correlating unknown faces to known
+archetypes in a recognition process.
+\subsection{Archetype Seeking}
+The time efficiency of finding archetypes is an important
+concern. It is known that for an input data set $\chi$ of
+$n$ points with d dimensions, the time complexity for computing
+a convex hull enclosing $\chi$ is as high as 
+\cite{thurau2010nearest,thurau2010yes}. For a set of tens of thousands of images with
+high-dimensional descriptors, exactly solving this convex
+hull problem quickly becomes computationally intractable.
+To this end, a few algorithms have been designed to achieve
+approximate solutions, of which the simplex volume maximization
+algorithm \cite{thurau2010yes} can provide a good approximate
+solution in a linear time complexity $O\left(n\right)$.
+\par
+With a mild assumption that all simplex vertices
+are equidistant, the Cayley-Menger determinant gives
+a simplified volume formula as Eq.\ref{eq1}
+\begin{equation}
+\begin{aligned}
+V_{ol}{\left(S\right)}^2=&\frac{a^{2\left(m-1\right)}}{2^{m-1}{\left(\left(m-1\right)!\right)}^2} 
+\left( {\frac{2}{a^4}\sum_{j=1}^{m-1}\sum_{j^\prime=j+1}^{m-1}d_{j,m}^2 d_{j^\prime,m}^2} \right. \\& + \left.{\frac{2}{a^2}\sum_{j=1}^{m-1}d_{j,m}^2 - \frac{m-2}{a^4}\sum_{j=1}^{m-1}d_{j,m}^4-\left(m-2\right)}\right)
+\end{aligned}
+\label{eq1}
+\end{equation}
+\section{Archetype Hull Ranking}
+In this section, the authors address the problem that they raised in
+Section 3: how to correlate an input sample with archetypes.
+Note that this sample may be an unseen sample outside the
+set of available training samples, and that these archetypes
+can be stored in memory for real-time computations.
+\par
+Since the archetype hull encloses most training samples in $\chi$ , we can project any input sample $x \in \mathbb{R}^d$ onto S, thereby obtaining a new (lossy)
+representation of $x$ in terms of the stored archetypes in $\upsilon$.
+Formally, they reconstruct the input $x$ using a convex combination
+of the archetypes in $\upsilon$ as Eq.\ref{eq2}
+\begin{equation}
+\begin{aligned}
+\min_{z\left(x\right)\in\mathbb{R}^m}\left \| x-Uz\left(x\right) \right \| \\
+ z\left(x\right) \geq 0, \quad \bf{1}^\top z\left(x\right)=1
+\end{aligned}
+\label{eq2}
+\end{equation}
+
+{\small
+\bibliographystyle{ieee}
+\bibliography{FD}
+}
+\end{document}
