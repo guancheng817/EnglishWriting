@@ -1,0 +1,92 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{times}
+\usepackage{stfloats}
+\usepackage[pagebackref=true,colorlinks,linkcolor=red,citecolor=green,breaklinks=true,bookmarks=false]{hyperref}
+\cvprfinalcopy
+\def\cvprPaperID{****} % *** Enter the CVPR Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+\title{From Noise Modeling to Blind Image Denoising}
+\author{Cheng Guan\\\\
+July 10, 2018}
+\begin{document}
+\maketitle
+\begin{abstract}
+As we know, traditional image denoising algorithms always consider
+the noise as  white Gaussian noise.
+However, in the real world, the noise on real images can be more com-
+plex actually. In this paper, in order to address this problem, the authors
+proposes a new blind image denoising algorithm. The algorithm can deal with real-world noisy images even when the noise model is not providedI. Using the mixture model of Gauss distribution (MOG) to model the image noise, it can approximate a wide range of continuous distribution. In this paper, the authors use Bayesian nonparametric technique
+and proposes a novel Low-rank MoG filter (LR-MoG) to
+recover clean signals (patches) from noisy ones contami-
+nated by MoG noise.
+\end{abstract}
+\section{Introduction}
+In the field of computer vision and image processing, image denoising
+is always an much important problem. For example, we can process a
+image to get high-quality image and it is an important pre-processing step
+for many high-level visual problems such as digital entertainment, 
+object recogniton, image segmentation, remote sensing imaging and so on. The
+purpose is to recover the clean image $\hat{X}$ from its noisy 
+observation $X$ which is contaminated by noise $E$ as shown in Eq.\ref{eq1}.
+\begin{equation}
+X = \hat{X} + E
+\label{eq1}
+\end{equation}
+\begin{figure*}
+	\centering
+	\includegraphics[scale=0.4]{1.png}
+	\caption{From left to right: an old photo ``Pele'' with noise; the denoising result of \cite{lebrun2015multiscale} and ours. Zoom in for better visualization.
+	}\label{fig1}
+\end{figure*}
+Estimating $\hat{X}$ from $X$ is an inverse problem. In recent years, 
+many scholars proposed some algorithms \cite{starck2002curvelet,burger1996structure,dabov2007image,buades2005non,elad2006image,lebrun2015noise} to
+solove the problem. However, most methods consider the noise as the
+homogeneous white Gaussian distribution. This assumption seems reasonable,
+because some noise can be converted to Gaussian noise. However, in 
+camera systems, the noise has many sources and can be more complex.
+So the authors proposes the ``blind image denoising'' algorithm to estimate 
+the noise model from a noisy observation.
+\par
+The traditional noise models can  fail to solve empirical
+noise. Fig.~\ref{fig1} demonstrates the performance of \cite{lebrun2015multiscale} on an
+old photo ``Pele''. Because of lack of flexibility of the noise
+model, \cite{lebrun2015multiscale} can only remove some noise but not all noise
+in some areas and over-smooth details in some other areas.
+To tackle the problem, the authors of this paper proposed a new non-local 
+blind image denoising algorithm.
+\section{Background}
+In this section, the authors introduces the information of Dirichlet process and its
+construction, which will be used to construct the LR-MoG filter.
+\subsection{Dirichlet Process}
+We know that the Dirichlet Process (DP) is a distribution over distribu-
+tions, \textit{i.e.}, each draw from a DP is itself a distribution. The
+DP is parameterized by a base distribution $H$ and a concentration parameter $\alpha$. A good feature favored by DP is that a
+drawn $G$ from a DP is discrete with probability one and
+the dimension of $G$ is infinite.
+\subsection{Stick-breaking Construction}
+The stick-breaking construction is one of the
+methods to explicitly represent draws from DP. With a stick-breaking construction, one can directly work with $G$ before drawing $\theta$. Sethuraman proved that a draw $G$ from
+DP $\left(α,H\right)$ can be described as Eq.\ref{eq2}
+\begin{equation}
+\begin{aligned}
+&v_i \sim \textbf{Beta}\left(1,\alpha \right), &\pi \sim v_i \prod_{j=1}^{i-1},\\
+&\theta_i \sim H, &G = \sum_{i=1}^{\infty}\pi_i \delta_{\theta_i}
+\end{aligned}
+\label{eq2}
+\end{equation}
+Here, $\textbf{Beta}\left(a,b\right)$ is a \textbf{Beta} distribution with parameters a
+and $b$. And $\delta_{\theta_i}$ is the Dirac probability measure concentrated
+at $\theta_i$. $\pi$ are the stick lengths, and it is almost sure that
+$\sum_{i=1}^{\infty}\pi_i = 1$. The stick-breaking construction indicates the
+discreteness of $G$ as well.
+{\small
+	\bibliographystyle{ieee}
+	\bibliography{BID}
+}
+\end{document}
