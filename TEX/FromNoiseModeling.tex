@@ -1,0 +1,108 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{times}
+\usepackage{stfloats}
+\usepackage[pagebackref=true,colorlinks,linkcolor=red,citecolor=green,breaklinks=true,bookmarks=false]{hyperref}
+\cvprfinalcopy
+\def\cvprPaperID{****} % *** Enter the CVPR Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+\title{From Noise Modeling to Blind Image Denoising}
+\author{Cheng Guan\\\\
+July 10, 2018}
+\begin{document}
+\maketitle
+\section{LR-MoG Filter}
+In this section, the authors introduces the LR-MoG filter to
+recover low-rank signals from noisy signals contaminated by
+MoG noise. Let $X=\left[x_1,x_2,\cdot\cdot\cdot\right]$ be a
+$d\times n$ matrix and $x_i \in \mathbb{R}^d,i\in \left(1,2,\cdot\cdot\cdot,n\right)$, be a noisy signal. X can be
+decomposed as shown in Eq.~\ref{eq1}
+\begin{equation}
+ X = \hat{X} + E
+\label{eq1}
+\end{equation}
+Here,$\hat{X}=\left[\hat{x_1,\cdot\cdot\cdot,\hat{x_n}}\right]$, 
+where $\hat{x}_i$ is low-rank representable.$E=\left[e_1\cdot\cdot\cdot e_n\right]$, 
+where $e_i$ is the noise on $x_i$ and follows MoG distribution.LR-MoG is 
+used to recover $\hat{X}$ from obesered $X$.In order to get the signal 
+from noise, the authors introduce Bayesian approach by introduction 
+priors on $\hat{X}$ and $E$. Then ths signal is recovered via inference.
+\subsection{Modeling Low-rank Component}
+Firstly, the authors model the low-rank component $\hat{X}$. Decomposing 
+each vector $\hat{x_i}$, where $i\in\left\lbrace 1,\cdot\cdot\cdot,n\right\rbrace$, 
+with $\hat{x_i}=A\hat{y_i}+u$.A is a $d\times d$ matrix and $u$ is 
+the mean vector of ${\left\lbrace \hat{x_i}\right\rbrace}_{i=1}^n$.In 
+the filed of dimensional reduction \cite{nasrabadi2007pattern}, some similar decomposition 
+methods can be also found. The matrix $x\hat{X}$ can be decomposed as
+shown in Eq.\ref{eq2}
+\begin{equation}
+\hat{X} = A\hat{Y}^\mathrm{T}+U
+\label{eq2}
+\end{equation}
+where $\hat{Y}=\left[\hat{y}_1\cdot\cdot\cdot\hat{y}_n\right]^\mathrm{T}$ 
+$U=\left[u\cdot\cdot\cdot u\right]$ and the column vectors is matrix 
+$A\hat{Y}$ are zero mean. The rank($M$) is the rank of a matrix $M$.
+Introduce the Gaussian prior on $u$ as shown in Eq.\ref{eq3}
+\begin{equation}
+u \sim \mathcal{N}\left(\cdot|u_0,K_0\right)
+\label{eq3}
+\end{equation}
+Here, $\mathcal{N}\left(\cdot|u_0,\sum \right)$ is a normal 
+distribution with mean $\mu$ and covariance $\sum$. In
+order to model the low-rank property of $\hat{X}$, let 
+matrix $A\hat{Y}^\mathrm{T}$ be low-rank representable, 
+because rank$\left(U\right)=1$ and rank$\left(\hat{X}\right)$ = 
+rank$\left(A\hat{Y}^\mathrm{T}+U\right) \leq$ rank $\left(A\hat{Y}+1\right)$.
+\par
+To model the low-rank property of $A\hat{Y}^\mathrm{T}$, the authors
+introduce the trace-norm prior \cite{candes2011robust,candes2009exact}and it can be well approximated 
+by the ARD[27]. And the authors adopt the soft trace-norm prior on 
+$A\hat{Y}^\mathrm{T}$ as shown in Eq.\ref{eq4} and Eq.\ref{eq5}
+\begin{equation}
+p\left(A\right) \varpropto {\rm exp}\left(-\frac{1}{2}{\rm tr}\left(AC_A^{-1}A^\mathrm{T}\right)\right)
+\label{eq4}
+\end{equation}
+\begin{equation}
+p\left(\hat{Y}\right) \varpropto {\rm exp}\left(-\frac{1}{2}{\rm tr}\left(\hat{Y}C_{\hat{Y}}^{-1}A^\mathrm{T}\right)\right)
+\label{eq5}
+\end{equation}
+where ${\rm tr}\left(\cdot\right)$ represents the trace of a matrix. $C_A$ and $C_{\hat{Y}}$ are set to be diagonal positive semidefinite with Eq.\ref{eq6} and 
+Eq.\ref{eq7}
+\begin{equation}
+C_A = diag_d \left\lbrace c^2_{a_1},\cdot\cdot\cdot,c^2_{a_d}\right\rbrace 
+\label{eq6}
+\end{equation}
+\begin{equation}
+C_{\hat{Y}} = diag_d \left\lbrace c^2_{y_1},\cdot\cdot\cdot,c^2_{y_d}\right\rbrace 
+\label{eq7}
+\end{equation}
+Here, diag $diag_d \left\lbrace c^2_{a_1},\cdot\cdot\cdot,c^2_{a_d}\right\rbrace$ represents a $d \times d$ diagonal matrix
+with diagonal items $c_1^2,\cdot\cdot\cdot,c^2_n$. Let $\hat{a}_j$ be the $j$th row vector of matrix $A$, and derive the specific formula of Eq.\ref{eq5} 
+with Eq.\ref{eq8}
+\begin{equation}
+\begin{aligned}
+p\left(A\right) &\varpropto {\rm exp}\left(-\frac{1}{2}{\rm tr}\left(AC_A^{-1}A^\mathrm{T}\right)\right) \\
+& \varpropto \prod_{j=1}^d {\rm exp}\left(-\frac{1}{2c^2_{a_j}}\hat{a}_j^\mathrm{T}\hat{a}_j\right)\\
+& \varpropto \prod_{j=1}^{d} \mathcal{N}\left(\hat{a}_j|0,c^2_{a_j}I\right)
+\end{aligned}
+\label{eq8}
+\end{equation}
+\section{Modeling MoG Noise}
+To model the complex noise on practical noisy images,
+the authors use MoG distribution for noise modeling. Because the
+number of components is not provided, tehy use Bayesian
+nonparametric technique and introduce the Dirichlet pro-
+cess prior to the MoG. Each Gaussian component is repre-
+sented by $\mathcal{N}\left(\cdot|\mu_i,\sum_{i}\right)$ with 
+mean vector $\mu_i$ and covariancematrix $\sum_{i}$.
+
+{\small
+	\bibliographystyle{ieee}
+	\bibliography{BID}
+}
+\end{document}
