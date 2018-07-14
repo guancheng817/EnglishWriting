@@ -1,0 +1,77 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{times}
+\usepackage{float}
+\usepackage{stfloats}
+\usepackage[pagebackref=true,colorlinks,linkcolor=red,citecolor=green,breaklinks=true,bookmarks=false]{hyperref}
+\cvprfinalcopy
+\def\cvprPaperID{****} % *** Enter the CVPR Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+\title{Finding Tiny Faces in the Wild with Generative Adversarial Networ}
+\author{Cheng Guan\\\\
+	July 14, 2018}
+\begin{document}
+\maketitle
+\begin{abstract}
+In the field of deep learning, GAN is a hot research direction in recent years. These days, I decide to read some papers about GAN. Over the past decades, face detection techniques have been developed rapidly, and one of  challenges is detecting small faces in unconstrained conditions. The reason is
+that tiny face images are often lacking detailed information and
+blurring. In this paper, the authors proposed an algorithm to directly 
+generate a clear high-resolution face from a blurry small
+one by adopting a generative adversarial network (GAN).
+The author also introduce new training losses to guide the generator network to 
+recover nice details and to promote the discriminator network 
+to distinguish real vs. fake and face vs. non-face.
+\end{abstract}
+\begin{figure*}[hb]
+	\centering
+	\includegraphics[scale=0.5]{1.png}
+	\caption{The detection results of tiny faces in the wild. (a) is the original low-resolution blurry face, (b) is the result of
+		re-sizing directly by a bi-linear kernel, (c) is the generated image by the super-resolution method, and our result (d) is learned
+		by the super-resolution ($\times$4 upscaling) and refinement network simultaneously. Best viewed in color and zoomed in.}
+	\label{fig1}
+\end{figure*}
+\section{Introduction}
+Face detection has been  studied over the past
+few decades and many methods have been proposed for most different scenes. Nowadays, 
+the performance of small face images is far from satisfactory. 
+The main difficulty for small images detection is that small 
+images lack sufficient detailed information to distinguish them 
+from the similar background. Some methods \cite{chakrabarti2016neural,zhu2016cms} use 
+intermediate $conv$ feature maps to represent faces at special
+scales, which keeps the balance between the computation burden 
+and the performance. In the generator sub-network, a super-resolution network (SRN) 
+is used to up-sample small faces to a fine scale
+for finding those tiny faces. SRN can improve
+the quality of up-sampled images with a large upscaling factors (4$\times$ in their current implementation), 
+as shown in Fig.~\ref{fig1}(b) 
+and Fig.~\ref{fig1}(c). However, even with SRN, up-scaled images are unsatisfactory due to faces of low resolutions.
+In the discriminator sub-network, the authors introduce a
+new loss function that enforces the discriminator network to
+distinguish the real/fake face and face/non-face simultaneously.
+%
+\section{Related Work}
+\subsection{Generative Adversarial Networks}
+The method of this paper, they use the super-resolution 
+and refinement network to generate clear and nice faces with
+resolution, as shown in Fig.~\ref{fig1}. Generative adversarial network (GAN) is introduced to generate realistic-looking images from random noise. GAN is applied to image generation, image editing, representation learning,
+image annotation, image super-resolving and character 
+transferring. In the discriminator network, the basic 
+GAN \cite{goodfellow2014generative} is trained to distinguish the real and fake high resolution images.
+\section{Proposed Method}
+In this section, the authors introduce their method in detail and the description of the classical GAN network.
+\subsection{GAN}
+GAN \cite{goodfellow2014generative} learns a generative model $G$ via an adversarial
+process. It trains a generator network $G$ and a discriminator network $D$ simultaneously. The training process alternately optimizes the generator and discriminator, which compete with each other. The generator $G$ is trained for generating the samples to fool the discriminator $D$, and the discriminator $D$ is trained to distinguish the real image and the fake
+image from the generator.
+
+{\small
+	\bibliographystyle{ieee}
+	\bibliography{GAN}
+}
+\end{document}
+
