@@ -1,0 +1,255 @@
+\documentclass[a4paper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{fullpage}
+\usepackage{amsmath}
+\usepackage{subfigure}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[pagebackref=true,colorlinks,linkcolor=red,citecolor=green,breaklinks=true,bookmarks=false]{hyperref}
+\usepackage{amssymb}
+\usepackage{outline} \usepackage{pmgraph} \usepackage[normalem]{ulem}
+\usepackage{graphicx} \usepackage{verbatim}
+\usepackage{url}
+\usepackage{indentfirst}
+\setlength{\parindent}{2em}
+% \usepackage{minted} % need `-shell-escape' argument for local compile
+
+\title{
+    \vspace*{1in}
+    \includegraphics[width=2.75in]{zhenglab-logo} \\
+    \vspace*{1.2in}
+    \textbf{\huge Deep Learning}
+    \vspace{0.2in}
+}
+
+\author{Cheng Guan \\
+    \vspace*{0.5in} \\
+    \textbf{VISION@OUC}\\
+    \vspace*{1in}
+}
+
+\date{\today}
+\begin{document}
+\maketitle
+\setcounter{page}{0}
+\thispagestyle{empty}
+\newpage
+\section{Logistic Regression}
+During the learning of last week, we have learned 
+$\hat{y}=\sigma \left(w^\mathrm{T}+b\right),{\rm where} \quad \sigma\left(z\right) =
+\frac{1}{1+e^{-z}}$. So to learn parameters for model, we're given a
+training set of $m$ training examples,given $\left\lbrace \left(x^{\left(1\right)},y^{\left(1\right)}\right),\cdot\cdot\cdot,\left(x^{\left(m\right)}, y^{\left(m\right)}\right) \right\rbrace$, want $\hat{y}^{\left(i\right)}=y^{\left(i\right)}$. We want to find parameters
+$w$ and $b$ and get the outputs on the training set. Our prediction on training 
+sample($i$) is $\hat{y}^{\left(i\right)}$.
+We introduces a loss(error) function which measures the discrepancy between
+the prediction($\hat{y}^{\left(i\right)}$) and the desired output ($y^{\left(i\right)}]$).Usually we can define loss function euqals to one half squared error of $\hat{y}$ and $y$ as Eq.\ref{eq1} and it turns out that
+we can do like this. 
+%
+\begin{equation}
+L\left(\hat{y}^{\left(i\right)},y^{\left(i\right)}\right) = \frac{1}{2}\left(\hat{y}^{\left(i\right)}-y^{\left(i\right)}\right)
+\label{eq1}
+\end{equation}
+%
+\par
+However, in logistic regression people don't usually do this. 
+Because when we come to learn the parameters, we will find that optimization problem which we talk about becomes non-convex.So we end up with optimization problem with
+multiple local optima and gradient descent may not find the global optimum.So in the 
+logistic regression, we will actually define a different loss function that plays
+a similar role as squared error that will give us an optimization 
+problem that is convex. What we use in logistic regression is Eq.\ref{eq2}.
+%
+\begin{equation}
+ L\left(\hat{y}^{\left(i\right)},y^{\left(i\right)}\right) = -\left(y^{\left(i\right)}\log\left(\hat{y}^{\left(i\right)}\right) +
+ \left(1-y^{\left(i\right)}\right)\log\left(1-\hat{y}^{\left(i\right)}\right)\right)
+\label{eq2}
+\end{equation}
+%
+\par
+We define cost function as shown in Eq.\ref{eq3} which is the average of the loss function of the entire training set. We are going to find the parameters $w$ and 
+$b$ that minimize the overall cost function.
+%
+\begin{equation}
+J\left(w,b\right)=\frac{1}{m}\sum_{i=1}^{m}L\left(\hat{y}^{\left(i\right)},y^{\left(i\right)}\right) = -\frac{1}{m}\sum_{i=1}^{m}\left[y^{\left(i\right)}\log\left(\hat{y}^{\left(i\right)}\right) +
+\left(1-y^{\left(i\right)}\right)\log\left(1-\hat{y}^{\left(i\right)}\right)\right]
+\label{eq3}
+\end{equation}
+%
+\par
+The loss function is applied to a single training example and the cost function is 
+the the cost of the parameters. So in training logistic regression model, we should find
+the parameters $w$ and $b$ to minimize the overall cost function $J$.
+\section{Gradient Descent}
+\subsection{Single Example on Logistic Regression}
+In this section, we introduce gradient descent algorithms which
+is used to train or learn the parameters $w$ and $b$ on training set.
+As shown in Fig.~\ref{fig1}, the cost function $J\left(w,b\right)$ is
+the surface above these horizontal axes $w$ and $b$, so the height
+of the surface represents the value of $J\left(w,b\right)$ at a
+certain point.
+%
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[scale=0.4]{1.png}
+	\caption{The cost function $J\left(w,b\right)$}
+	\label{fig1}
+\end{figure}
+%
+What we want to do is to find the value of $w$ and
+$b$ that minimize the cost function. From the Fig.~\ref{fig1}, we 
+know that the cost function $J$ is a convex function,which is not look 
+like the non-convex function that has lots of different local optimum.
+And it is one of the reasons why we use this particular cost function $J$ for logistic
+regression. What gradient descent does is that it starts at the initial point and 
+takes step in the steepest downhill direction. So, after one step of
+gradient descent, that's one iteration of gradient descent. After two
+iterations of gradient descent, we might get another lower point. After
+three or more iterations of gradient descent, the curve eventually 
+converge to the global optimum. So the Fig.~\ref{fig1} illustrates the gradient descent 
+algorithm.
+\par
+In the Fig.~\ref{fig2}, we ignore $b$ and mike this a 
+one-dimensional plot instead of a high-dimensional plot.
+%
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[scale=0.5]{2.png}
+	\caption{Gradient descent}
+	\label{fig2}
+\end{figure}
+%
+Gradient descent does like this. Repeat $w:= w-\alpha \frac{dJ}{dw}$ and the $\alpha$
+is the learning rate which can controls how big a step we take on each iteration 
+or gradient descent. We use $:=$ to represent updating $w$. We should make sure 
+that gradient makes sense. Supposing that certain point in the right half of 
+Fig.~\ref{fig2}, the derivative of the point is positive. $w$ gets
+new value which equals to $w - \alpha\frac{dJ}{dw}$. The derivative 
+is positive and we slowly decrease the parameter $w$. Supposing that
+certain point in the left half, the derivative is positive and we 
+slowly increase the parameter $w$.
+\par
+So whether we initialize on the 
+left or on the right, gradient descent will move toward to the global 
+minimum. $J\left(w,b\right)$ is a function of both parameter $w$ and $b$. 
+So in this case, the inner loop of gradient decent should continue to update
+$w$ and $b$ as shown in Eq.\ref{eq4}.
+%
+\begin{equation}
+\begin{aligned}
+ &w:= w - \alpha \frac{dJ\left(w,b\right)}{dw} \\
+ &b:= b - \alpha \frac{dJ\left(w,b\right)}{db}
+\end{aligned}
+\label{eq4}
+\end{equation}
+%
+According to the above formulas we have learned. Next we dive into 
+gradient descent for logistic regression. The predictions $\hat{y}$ 
+is defined as Eq.\ref{eq5}.
+\begin{equation}
+\hat{y}=a=\sigma\left(z\right)
+\label{eq5}
+\end{equation}
+Now we just focus on just one example and the loss function is 
+defined as Eq.\ref{eq6}.
+\begin{equation}
+ L\left(a,y\right) = -\left(y\log\left(a\right)+\left(1-y\right)\log\left(1-a\right)\right)
+ \label{eq6}
+\end{equation}
+$a$ is the output of the logistic regression and $y$ is truth 
+label.Supposing that this example has two features $x_1$ and 
+$x_2$. In order to compute $z$, we need input $w_1$, $w_2$ and
+$b$. These parameters in a computation graph are used to compute
+$z$ which is equals to $w_1\times x_1+w_2\times x_2 +b$ as 
+shown in Fig.~\ref{fig3}.
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[scale=0.5]{3.png}
+	\caption{The computation graph}
+	\label{fig3}
+\end{figure}
+What we want to is to modify parameters $w$ and $b$ in order to 
+reduce the loss. In the back propagation, we should compute 
+$\frac{dL}{da}$, $\frac{dL}{z}$ and $\frac{dL}{w}$. In the final step
+of back propagation, we need to compute how much we change parameters
+$w$ and $b$. Compute $\frac{\partial L}{\partial w_1}=x_1 dz$, $\frac{\partial L}{\partial w_2}=x_2 dz$ and $\frac{dL}{db }=dz$ in turn and
+update $w_1$, $w_2$ with Eq.\ref{eq4}.
+\subsection{$m$ Examples on Logistic Regression}
+Next step, we discuss $m$ examples on logistic regression. According to the
+Eq.\ref{eq3}, we know that overall cost functions with the sum was 
+really the average of the 1 over m term of the individual losses. 
+It turns out that the derivative of overall cost function to $w$ is 
+also the average of derivatives of the individual loss term to $w$. 
+We have learned how to compute single training example and next what 
+we need to do is really compute these own derivatives. And then, we
+write code to implement the updating of $w_1$ and $w_2$ and $b$ 
+with multiple steps of gradient descent.
+\section{Vectorization}
+Vectorization is the art of getting rid of explicit for loop in our
+code. Andrew Ng show a demo comparing the run time of for loop and 
+vectorization. From the result, we know that vectorization can 
+significantly speed up our code. So the rule of thumb is whenever 
+possible, avoid using explicit for loop.
+\subsection{Vectorizing Logistic Regression}
+In order to carry out the forward propagation step, it need to compute these predictions on $m$ training 
+examples. We can use vectorization to compute instead 
+of explicit for loop. We define $X$ is a matrix of
+$n_x \times m$ and $Z=\left[z^{\left(1\right)}\cdot\cdot\cdot z^{\left(m\right)}\right]=w^\mathrm{T}X+\left[b\cdot\cdot\cdot b\right]$. According to vectorization, the 
+numpy command is $Z = np.dot\left(w.T,X\right)+b$, 
+$b$ is a real number, but Python automatically takes 
+this real number and expands a $1\times m$ row vector.
+So, we just use one line code to calculate $Z$, which is a $1\times m$ matrix that contains all of the 
+$z^{\left(i\right)},i \in \left(1,m\right)$. We define the Eq.\ref{eq7},
+% eq6
+\begin{equation}
+a^{\left(i\right)} = \sigma\left(z^{\left(i\right)}\right),i \in \left(1,m\right)
+\label{eq7}
+\end{equation}
+%
+and define all of $a^{\left(i\right)}$ as a $1\times m$ matrix $A$ as shown in Eq.\ref{eq8}, $m$ training example for $dZ$, whose matrix is $1\times m$, as shown in Eq.\ref{eq9}, db is the Eq.\ref{eq10}.
+%
+\begin{equation}
+A = \left[a^{\left(1\right)} a^{\left(2\right)}\cdot\cdot\cdot a^{\left(m\right)}\right]=\sigma\left(Z\right)
+\label{eq8}
+\end{equation}
+%
+\begin{equation}
+dZ = A-Y
+\label{eq9}
+\end{equation} 
+\begin{equation}
+db = \frac{1}{m}\sum_{i=1}^{m}dz^{\left(i\right)}
+\label{eq10}
+\end{equation}
+%
+The process of algorithm \cite{dp} of one step of gradient descent as shown in Table.\ref{tb1}.
+
+\begin{table}[tp]
+	\centering
+	\begin{tabular}{c}
+		\hline
+		\textbf{Prcoess of Algirithm with Python}\\
+		\hline
+		import numpy as np\\
+		Z = np.dot(w.T,X) + b\\
+		A = sigmoid(Z)\\
+		dZ = A-Y\\
+		dw = 1/m*np.dot(X,dZ.T)\\
+		db = 1/m*np.sum(dZ)\\
+		w = w - alpha*dw\\
+		b = b - alpha*db\\
+		\hline
+	\end{tabular}
+\caption{Process of algorithm}
+\label{tb1}
+\end{table}
+\section{Broadcasting in Python}
+Broadcasting is another technique that we can use to
+make our Python code faster.
+\bibliographystyle{ieee}
+%\bibliography{ref.bib}
+
+\bibliographystyle{ieee}
+\bibliography{dp}
+
+\end{document}
