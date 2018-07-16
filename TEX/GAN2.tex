@@ -1,0 +1,85 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{times}
+\usepackage{stfloats}
+\usepackage[pagebackref=true,colorlinks,linkcolor=red,citecolor=green,breaklinks=true,bookmarks=false]{hyperref}
+\cvprfinalcopy
+\def\cvprPaperID{****} % *** Enter the CVPR Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+\title{Finding Tiny Faces in the Wild with Generative Adversarial Network}
+\author{Cheng Guan\\\\
+July 16, 2018}
+\begin{document}
+\maketitle
+\section{GAN}
+In this section, the author introduce their method. Firstly, they give a description on the classical GAN
+network. Then, the whole architecture of their method as shown in Fig.~\ref{fig1}.The objective function is defined as shown in Eq.\ref{eq1}.
+%
+\begin{figure*}[hb]
+	\centering
+	\includegraphics[scale=0.4]{1.png}
+	\caption{The pipeline of the proposed tiny face detector system.}
+	\label{fig1}
+\end{figure*}
+%
+\begin{equation}
+\begin{aligned}
+\mathcal{L}\left(G,D\right) = &\mathbb{E}_{x\sim P_{data}\left(x\right)} \left[\log D_\theta \left(x\right)\right]+\\
+&\mathbb{E}_{z\sim P_{z}\left(z\right)}\left[\log\left(1-D_\theta\left(G_w\left(z\right)\right)\right)\right]
+\end{aligned}
+\label{eq1}
+\end{equation}
+%
+$z$ is the random noise and $x$ denotes the real data, $θ$
+and $ω$ denote the parameters of $G$ and $D$ respectively. Here,
+$G$ tries to minimize the objective function and adversarial $D$
+tries to maximize it as shown in Eq.\ref{eq2}:
+\begin{equation}
+\arg \min_G \max_D \mathcal{L}_{GAN}\left(G,D\right)
+\label{eq2}
+\end{equation}
+%
+\par
+Similar to \cite{goodfellow2014generative}, the authors design a generator network 
+$G_{w_G}$ which is optimized in an alternative method along 
+with a discriminator network $D_{\theta_D}$ to solve the small
+face super-resolution and classification problem, which is
+defined as shown in Eq.\ref{eq3}:
+\begin{equation}
+\begin{aligned}
+\arg \min_{w_G} \max_{\theta_D} \mathbb{E}_{\left(I^{HR},y\right)\sim
+P_{train}\left(I^{HR,y}\right)}\left[\log D_{\theta_D}\left(I^{HR},y\right)\right]+\\
+\mathbb{E}_{\left(I^{LR},y\right)\sim
+	P_{G}\left(I^{LR},y\right)}\left[\log\left(1- D_{\theta_D}\left(G_{w_G}\left(I^{HR},y\right)\right)\right)\right]
+\end{aligned}
+\label{eq3}
+\end{equation}
+where $I^{LR}$ denotes face candidates with low-resolution,
+$I^{HR}$ represents the face candidates with high-resolution,
+and $y$ is the label (\textit{i.e.} face or non-face).
+%
+\section{Network Architecture}
+\textbf{Generator network.} As shown in Fig.~\ref{fig1}, the authors
+adopt a deep CNN architecture which has shown effectiveness for
+image super-solution. There are two fractionally-strided convolutional layers \cite{radford2015unsupervised}
+(\textit{i.e.} de-convolutional layer) in the network, and each de-convolutional layer consists of learned kernels which perform up-sampling a low-resolution image to a 2$\times$ super-resolution image.
+\par
+\textbf{Discriminator network.} The authors use VGG19 \cite{simonyan2014very} as their
+backbone network in the discriminator. To avoid too many down-sampling operations for the
+small blurry faces, they remove the max-pooling from the
+``conv5'' layer. Moreover, the authors replace all the fully connected
+layer (\textit{i.e.} $f_{c6},f_{c7},f_{c8}$) with two parallel fully connected layers $f_{c_{GAN}}$ and $f_{c_{clc}}$ . The input is the super-resolution
+image, the output of $f_c$ GAN branch is the probability of the
+input being a real image, and the output of the $f_{c_{clc}}$ is the
+probability of the input being a face.
+
+{\small
+	\bibliographystyle{ieee}
+	\bibliography{GNN2}
+}
+\end{document}
