@@ -1,0 +1,86 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{times}
+\usepackage{stfloats}
+\usepackage[pagebackref=true,colorlinks,linkcolor=red,citecolor=green,breaklinks=true,bookmarks=false]{hyperref}
+\cvprfinalcopy
+\def\cvprPaperID{****} % *** Enter the CVPR Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+\title{Learning Face Age Progression: A Pyramid Architecture of GANs}
+\author{Cheng Guan\\\\
+July 20, 2018}
+\begin{document}
+\maketitle
+\section{Generator}
+To achieve aging effects while
+simultaneously maintaining person-specific information, a
+compound critic is exploited, which incorporates the traditional squared Euclidean loss in the image space, the GAN
+loss that encourages generated faces to be indistinguishable
+from the training elderly faces in terms of age, and the identity loss minimizing the input-output distance in a high-level
+feature representation which embeds the personalized characteristics. As shown in Fig.~\ref{fig1}.
+%
+\begin{figure*}[hb]
+	\centering
+  	\includegraphics[width=1\linewidth]{1.png}
+  	\caption{Framework of the proposed age progression method.}
+  	\label{fig1}
+\end{figure*}
+%
+\par
+Synthesizing age progressed faces only requires a forward pass through $G$. The generator network is combination of encoder and decoder. With the input young face, it first exploits three strided 
+convolutional layers to encode it to a latent space, capturing the facial properties that tend to
+be stable w.r.t. the elapsed time, followed by four residual
+blocks \cite{he2016deep} modeling the common structure shared by the
+input and output faces, similar to the settings in \cite{johnson2016perceptual}.
+Rather than using the max-pooling and upsampling
+layers to calculate the feature maps, the authors employ the 
+$3 \times 3$
+convolution kernels with a stride of 2, ensuring that every
+pixel contributes and the adjacent pixels transform in a 
+synergistic manner. All the convolutional layers are followed
+by Instance Normalization and ReLU non-linearity 
+activation. Paddings are added to the layers to make the input and
+output have exactly the same size. 
+\section{Discriminator}
+The system critic incorporates the prior knowledge of the
+data density of the faces from the target age cluster, and
+a discriminative network $D$ is thus introduced, which 
+outputs a scalar $D\left(x\right)$ representing the probability that $x$ comes from the data. The distribution of the generated faces $P_g$
+(They denote the distribution of young faces as $x \sim P_{young}$,
+then $G\left(x\right)\sim P_g$ ) is supposed to be equivalent to the 
+distribution $P_{old}$ when optimality is reached. Supposing that
+we follow the classic GAN \cite{goodfellow2014generative}, which uses a binary cross
+entropy classification, the process of training $D$ amounts to
+minimizing the loss:
+\begin{equation}
+   \begin{aligned}
+	\mathcal{L}_{GAN\_D} = &-\mathbb{E}_{x\in P_{young}\left(x\right)}\log\left[1-D\left(G\left(x\right)\right)\right]\\&-\mathbb{E}_{x\in P_{old}\left(x\right)}\log\left[D\left(x\right)\right]
+	\end{aligned}
+\end{equation}
+It is always desirable that $G$ and $D$ converge coherently;however, $D$ frequently achieves the distinguishability faster
+in practice, and feeds back vanishing gradients for $G$ to
+learn, since the JS divergence is locally saturated. Recent
+studies, \textit(i.e.) the Wasserstein GAN, the Least Squares
+GAN \cite{mao2017least}, and the Loss-Sensitive GAN \cite{qi2017loss}, reveal that
+the most fundamental issue lies in how exactly the distance
+between sequences of probability distributions is defined.
+\section{Objective}
+Besides the specially designed age-related GAN critic
+and the identity permanence penalty, a pixel-wise L2 loss
+in the image space is also adopted for further bridging the
+input-output gap, \textit{e.g.}, the color aberration, which is formulated as shown in Eq.\ref{eq2}:
+\begin{equation}
+\mathcal{L}_{pixel}= \frac{1}{W\times H\times C} {\left \|G\left(x\right)-x  \right \|}_2^2
+	\label{eq2}
+\end{equation}
+where $x$ denotes the input face and $W, H$, and $C$ correspond to the image shape.
+{\small
+	\bibliographystyle{ieee}
+	\bibliography{GNN4}
+}
+\end{document}
