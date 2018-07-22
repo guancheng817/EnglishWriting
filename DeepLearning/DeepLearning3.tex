@@ -1,0 +1,274 @@
+\documentclass[a4paper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{fullpage}
+\usepackage{amsmath}
+\usepackage{subfigure}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[pagebackref=true,colorlinks,linkcolor=red,citecolor=green,breaklinks=true,bookmarks=false]{hyperref}
+\usepackage{amssymb}
+\usepackage{outline} \usepackage{pmgraph} \usepackage[normalem]{ulem}
+\usepackage{graphicx} \usepackage{verbatim}
+\usepackage{url}
+\usepackage{indentfirst}
+\setlength{\parindent}{2em}
+% \usepackage{minted} % need `-shell-escape' argument for local compile
+
+\title{
+    \vspace*{1in}
+    \includegraphics[width=2.75in]{zhenglab-logo} \\
+    \vspace*{1.2in}
+    \textbf{\huge Deep Learning}
+    \vspace{0.2in}
+}
+
+\author{Cheng Guan \\
+    \vspace*{0.5in} \\
+    \textbf{VISION@OUC}\\
+    \vspace*{1in}
+}
+
+\date{\today}
+\begin{document}
+\maketitle
+\setcounter{page}{0}
+\thispagestyle{empty}
+\newpage
+\section{Research problem}
+During this week, I spend about four hours a day to learn deep learning course \cite{dp07} and continue to practice programs in leetcode.
+\section{Research progress}
+\subsection{Neural Network Representation}
+As shown in Fig.~\ref{fig1}, the input features $x_1, x_2, x_3$ stacked vertically were called the input layer of neural network, which contains the inputs of neural network. The another layer of circles is called a hidden layer of neural network. The final layer that is called output layer is just one node, which is responsible for generating the predicted value $\hat{y}$. The meaning of hidden layer is that in the training set the true values for these nodes in the middle are not observed. In the training set, I don't know its value and just know the value of input and output. 
+\par
+So this is so-called hidden layer. $a^{\left[0\right]}$ refers to the values that different of the neural network are passing on to the subsequent layers. So the input layer passes on the value $x$ to the hidden layer. $a^{\left[1\right]}$ is a four dimensional vector. The input layer will generate value $a^{\left[2\right]}$ which is a real number and so $\hat{y}$ is equal to the value of $a^{\left[2\right]}$. Generally speaking, Fig.~\ref{fig1} is a two-layer neural network, because the input layer is regarded as the $0$th layer. 
+%
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.7\linewidth]{neuralNetwork.png}
+	\caption{Neural network}
+	\label{fig1}
+\end{figure}
+%
+As shown in Fig.~\ref{fig2}, the circle images represents two steps of computation. The first step is to compute $z$ and the second step is to compute activation. So the neural network just does this more times.
+%
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.7\linewidth]{2.png}
+	\caption{Neural network}
+	\label{fig2}
+\end{figure}
+%
+As $a_i^{\left[l\right]}$ shown, $l$ is the layer of neural network and $i$ refers to the nodes in that layer. As shown as the Eq.\ref{eq1}, we can calculate the output of a hidden layer neural network.
+\begin{equation}
+	\begin{aligned}
+   &z^{\left[1\right]} = W^{\left[1\right]}X+b^{\left[1\right]}\\
+   &a^{\left[1\right]} = \sigma \left(z^{\left[1\right]}\right)\\
+   &z^{\left[2\right]} = W^{\left[2\right]}a^{\left[1\right]}+b^{\left[2\right]}\\
+   &a^{\left[2\right]} = \sigma \left(z^{\left[2\right]}\right)
+   \end{aligned}
+   \label{eq1}
+\end{equation}
+\subsection{Vectorizing across Multiple Examples}
+Take the training examples and stack them in columns to form a matrix. As shown in Eq.\ref{eq2}, $l$ refers to the layer of neural network and $i$ refers to the $i$th example. Actually if we use for loop to implement the algorithm, that will be a difficult process of computation. As shown in Fig.\ref{vectorization}, In $m$ training samples, each calculation is repeated in the same process, and the output of the same size and structure is obtained, so a single sample is merged into a matrix by the idea of vectorization.
+%
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.7\linewidth]{vectorization.png}
+	\caption{Justification for vectorized implementation}
+	\label{vectorization}
+\end{figure}
+%
+\begin{equation}
+ \begin{bmatrix}
+ \vdots&  \vdots&  \vdots& \vdots\\ 
+ a^{\left[l\right]\left(1\right)}& a^{\left[l\right]\left(2\right)}  &\cdots &a^{\left[l\right]\left(i\right)} \\ 
+ \vdots&  \vdots&  \vdots& \vdots
+ \end{bmatrix}
+\label{eq2}
+\end{equation}
+%
+\subsection{Activation Function}
+So far, there are four activation function in Fig.~\ref{activation} the sigmoid activation is regarded as the activation function.
+it's just one of the activation functions and sometimes other activation function can work much better. The sigmoid function goes between 0 and 1 but the $\tanh$ can almost always work better than the
+sigmoid function, which goes between -1 and +1 as shown in Eq.\ref{eq3}:
+\begin{equation}
+ \frac{e^z-e^{-z}}{e^z+e^{-z}}
+ \label{eq3}
+\end{equation}
+%
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.7\linewidth]{activation.png}
+	\caption{Activation functions}
+	\label{activation}
+\end{figure}
+%
+It turns out that for hidden units if the activation function is equals to $tanh\left(z\right)$, which has the effect of centering the data and makes learning for the next layer a little bit easier.
+\subsection{Derivatives of Activation Functions}
+When we implement back-propagation for the neural network, we
+need to compute the derivative of the activation functions. So 
+it's important to choose activation function and compute the 
+slope of these functions. Take the sigmoid function as an example, we can easily compute the its derivative as shown in Eq.\ref{eq4}.
+\begin{equation}
+   \sigma^\prime\left(z\right) = \sigma\left(z\right)\left[1-\sigma\left(z\right)\right]
+   \label{eq4}
+\end{equation}
+\par
+According to the knowledge about calculus, we can take derivatives and show that it simplifies to the Eq.\ref{eq5}:
+\begin{equation}
+  g^\prime \left(z\right) = 1-\left(\tanh\left(z\right)\right)^2 
+  \label{eq5}
+\end{equation}
+As for the activation function ReLU, we can calculate the derivatives similarly  as shown in Eq.\ref{eq6}. It doesn't 
+matter to set the derivative to be equal to a certain value 
+when when $z$ is equal to zero. So arm with these formulas, we
+can compute the slopes or the derivatives of the activation functions and implement gradient descent for teh neural network.
+\begin{equation}
+	g^\prime\left(z\right) =\left\{
+	  \begin{aligned}
+	   & 0,\quad if \quad z < 0 \\
+	   & 1, \quad if \quad z > 0 \\
+	   & undefined \quad if \quad z = 0
+	  \end{aligned}
+	  \right.
+	  \label{eq6}
+\end{equation}
+\subsection{Gradient Descent for Neural Network}
+According the knowledge of the calculus, we can deduce the 
+formulas of the back propagation as shown in Eq.\ref{eq7}:
+\begin{equation}
+	\begin{aligned}
+	& dz^{\left[2\right]} = a^{\left[2\right]}-y\\
+	& dW^{\left[2\right]} = dz^{\left[2\right]}a^{\left[1\right]^\mathrm{T}}\\
+	& db^{\left[2\right]} = dz^{\left[2\right]}\\
+	& dz^{\left[1\right]} = W^{\left[2\right]^\mathrm{T}}dz^{\left[2\right]} \ast 
+	g^{\left[1\right]\prime}\left(z^{\left[1\right]}\right)\\
+	& dW^{\left[1\right]} = dz^{\left[1\right]}x^\mathrm{T}\\
+	& db^{\left[1\right]} = dz^{\left[1\right]}
+	\end{aligned}
+	\label{eq7}
+\end{equation}
+\subsection{Random Initialization}
+For the logistic regression it was fine to initialize the 
+weights to zero, but for a neural network of initializing the arrays of the parameters to all zero and apply gradient descent that will failed. As shown in Fig.~\ref{fig3}, $x_1 , x_2$ are two input features and two hidden units. So the
+$W^{\left[1\right]}$ ia a matrix of $2\times2$. If we initiate the matrix to zero and $b^{\left[1\right]}$ is also a zero matrix. It turns out that initializing the bias terms to zero is actually fine, however initializing $W$ to 
+all zero is a problem. 
+%
+\begin{table}[ht]
+	\caption{Initialize the parameters}
+	\centering
+	\begin{tabular}{c}
+		\hline
+		w = np.random.rand((2,2))$\ast$0.01\\
+		b = np.zero((2,1))\\
+		\hline	
+	\end{tabular}
+    \label{tb1}
+
+\end{table}
+\par
+If the parameters of the two hidden neurons are set to the same size at the beginning, then the two hidden neurons have the same effect on the output unit. The same gradient size will be obtained when the back gradient descends to the calculation, so the two hidden layer units are still the same after repeated iteration.
+So the solution is to initialize the parameters randomly. We
+can initialize the parameter as shown in Table.\ref{tb1}.
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.7\linewidth]{3.png}
+    \caption{A two layer neural network}
+    \label{fig3}
+\end{figure}
+\par 
+  Multiply the value of $W$ by 0.01 to make the weight $W$ initialize to a smaller value as much as possible. This is because if the sigmoid function or the tanh function is used as an activation function, the $W$ is smaller, then the value of $Z = WX+b$ is also relatively small.  The proximity gradient of the 0 point area is larger, which can greatly improve of speed of updateing of the algorithm. If the $W$ is too large, the gradient will be smaller, so the training process will become very slow.
+\section{Deep Neural Network}
+\subsection{What it Deep Neural Network}
+As shown in Fig.\ref{fig4}, they are the logistic regression, two layer neural network, three layer neural 
+network and five layer neural network respectively. Technically logistic regression is a one layer neural network.
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.7\linewidth]{4.png}
+	\caption{What is a deep neural network? They are the logistic regression, two layer neural network, three layer neural network and five layer neural network, respectively.}
+	\label{fig4}
+\end{figure}
+On the neural network of $L$ layer, the dimension of each parameters in a single example are in the Tab.\ref{tb2}:
+\begin{table}[hb]
+	\centering
+    \caption{The dimension of each parameter.}
+	\begin{tabular}{c}
+		\hline
+		$W^{\left[l\right]} : \left(n^{\left[l\right]},n^{\left[l-1\right]}\right)$ \\
+		$b^{\left[l\right]} : \left(n^{\left[l\right]},1\right)$\\
+		$dW^{\left[l\right]} : \left(n^{\left[l\right]},n^{\left[l-1\right]}\right)$ \\
+		$db^{\left[l\right]} : \left(n^{\left[l\right]},1\right)$ \\
+		$Z^{\left[l\right]} : \left(n^{\left[l\right]},1\right)$\\
+		$A^{\left[l\right]} = Z^{\left[l\right]}:\left(n^{\left[l\right]},1\right)$ \\
+		\hline
+	\end{tabular}
+	\label{tb2}
+\end{table}
+The Fig.\ref{fig5} is the four layer neural network that has
+three hidden layers and the number of the hidden layer is 4, 4 and 3, respectively. $n^{\left[l\right]}$ denotes the 
+number of nodes or the number of units in layer $l$. So if we index the input as layer zero, $n^{\left[1\right]}$ that
+is the first hidden layer would be equal to 5. Similarly, the $n^{\left[2\right]}$ that is the second hidden layer would be equal to 5, $n^{\left[3\right]}$ would be equal to 5, $n^{\left[4\right]}$ would be equal to 3, $n^{\left[5\right]}$ would be equal to 1. $a^{\left[l\right]}$ denotes the activations in layer $l$ and the $W^{\left[l\right]}$ denote the weights in layer 
+$l$. The input features are called $x$ which is the activation function of the layer zero and the activation function of final layer is equal to $\hat{y}$. 
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.7\linewidth]{5.png}
+	\caption{The five layer neural network}
+	\label{fig5}
+\end{figure}
+\subsection{The Purpose of Using DNN}
+In a system for face recognition or face detection, maybe we input a picture of a face. We regard the first layer of the neural network as a feature detector or an edge detector. 
+%
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.7\linewidth]{f_recognition.png}
+	\caption{The process of face recognition.}
+	\label{f_recognition}
+\end{figure}
+%
+\par
+As shown in Fig.~\ref{f_recognition}, for face recognition, the first layer of the neural network extracts the outline and edge of the face from the original picture. Each neuron learns the information of the different edges; the second layer of the network combines the first layer of the learned edge information to form some local features of the face, such as the eyes, the mouth and so on. The latter layers gradually combine the features of the previous layer to form the appearance of the human face. With the increase of the number of neural networks, the features extend from the original edge to the whole of the face, from the whole to the part, from simple to complex. The more layers there are, the more accurate the learning effect will be.
+\par
+For speech recognition, the first layer of neural network can learn some tones of the language pronunciation. The deeper network can detect the basic phonemes, then to the word information, and gradually deepen the learning of phrases and sentences. So from the above two examples, I can see that as the depth of neural network deepens, the model can learn more complicated problems and function more powerful.
+\section{Train/Dev/Test sets}
+When training a neural network, I should have to make a lot of decisions,
+such as how many layer the neural network have, how many hidden units we want each layer to have and what the activation functions we want to use to for the different layers. It's almost impossible to correctly guess the right value for all of these and for other hyperparameter choices. So in practice applied machine learning is a highly iterative process.
+Setting up the data sets well in terms of the train, development and test sets can make the process of training much more efficient. 
+Even very experienced deep learning people find it almost impossible to
+correctly, and then applied deep leanring is a very iterative process where we just have to go around this
+cycle many times to hopefully find a good choice of network for application.
+%
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.7\linewidth]{training_data.png}
+	\caption{Train/dev/test sets.}
+	\label{training_data}
+\end{figure}
+%
+ As shown in Fig.\ref{training_data}, training data is divided into some portion of it to be training set. And some portion of it to be hold-out cross validation set and sometimes it also is called development set. Then some final portion of it is the test
+set. In order to get an unbiased estimate of how well algorithm is doing, in the previous era of machine learning, it was common
+practice to take all data and split it according to maybe a 70/30\% in terms of people often talk about
+70\% train and 30\% test splits or maybe a 60\% train, 20\% dev, and 20\% test which is widely considered
+best practice serveral years ago. However, we now have a million examples in total, then the trend is that, we might with 99.5\% train, 0.25\% dev and 0.25\% test. When setting up the machining learning problem, usually set it up into a train, dev and test sets. if we have a
+relatively small dataset, these traditional ratios might be fine. But if we have a much larger data set, it's also fine to set the dev and test sets to be much smaller than the 20\% or even 10\% of the data. From this section, I learn the practical aspects to make neural network work well and know  how to set up data and make sure optimization algorithm runs quickly, in order to make our learning algorithm to learn in a suitable time. 
+\section{Progress in this week}
+After a week of deep learning of Andrew Ng, I finish the practicing of programs. I have a deeper understanding of deep learning, including shallow neural networks, deep neural networks, and their forward propagation and backward propagation.
+\section{Plan}
+\begin{tabular}{rl}
+	\textbf{Objective:} & Finishing improving deep neural networks courses \\
+	\textbf{Deadline:} & 2018.07.30
+\end{tabular}
+
+\begin{description}
+	\item[\normalfont 2018.07.18---2018.07.24] Finish neural networks and Deep Learning.
+	\item[\normalfont 2018.07.24---2018.07.30] Finish improving deep neural networks courses.
+	\item[\normalfont 2018.07.31---2018.08.06] Finish structuring machine learning projects courses.
+	\item[\normalfont 2018.08.07---2018.08.13] Finish convolutional neural networks courses.
+	\item[\normalfont 2018.08.14---2018.08.20] Finish sequence models courses.
+\end{description}
+
+\bibliographystyle{ieee}
+\bibliography{dp3}
+
+\end{document}
