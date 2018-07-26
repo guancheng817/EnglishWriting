@@ -1,0 +1,81 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{times}
+\usepackage{stfloats}
+
+\usepackage[pagebackref=true,colorlinks,linkcolor=red,citecolor=green,breaklinks=true,bookmarks=false]{hyperref}
+\cvprfinalcopy
+\def\cvprPaperID{****} % *** Enter the CVPR Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+\title{Person Transfer GAN to Bridge Domain Gap for Person Re-Identification}
+\author{Cheng Guan\\\\
+July 26, 2018}
+\begin{document}
+\maketitle
+\begin{abstract}
+	With the development of the Re-Identification (ReID), although the performance of person Re-Identification
+	has been significantly boosted, many challenging issues in real scenarios have not been fully investigated, \textit{e.g.},
+	the complex scenes and lighting variations, viewpoint and
+	pose changes, and the large number of identities in a camera network. To facilitate the research towards conquering those issues, this paper contributes a new dataset called
+	MSMT17  with many important features, \textit{e.g.}, 1) the raw
+	videos are taken by an 15-camera network deployed in both
+	indoor and outdoor scenes, 2) the videos cover a long period of time and present complex lighting variations, and 3)
+	it contains currently the largest number of annotated identities, \textit{e.g.}, 4,101 identities and 126,441 bounding boxes. The authors also observe that, domain gap commonly exists between
+	datasets, which essentially causes severe performance drop
+	when training and testing on different datasets.
+\end{abstract}
+\section{Introduction}
+	Person Re-Identification (ReID) targets to match and return images of a probe person from a large-scale gallery
+	set collected by camera networks. Because of its important
+	applications in security and surveillance, person ReID has
+	been drawing lots of attention from both academia and industry. Thanks to the development of deep learning and the
+	availability of many datasets, person ReID performance has
+	been significantly boosted. 
+	\par
+	Although the performance on current person ReID
+	datasets is pleasing, there still remain several open issues hindering the applications of person ReID. The currently largest \textit{DukeMTMC-reID}
+	 \cite{zheng2017unlabeled} contains less than 2,000 identities and presents simple lighting conditions. Those limitations simplify the person ReID task and help to achieve high accuracy. Another challenge they observe is that, there exists domain gap between different person ReID datasets, \textit{i.e.}, training and testing on different person ReID datasets results in severe performance drop. As shown in Fig.\ref{fig1} the
+	 domain gap could be caused by many reasons like different
+	 lighting conditions, resolutions, human race, seasons, backgrounds, \textit{etc}.
+	 \begin{figure}
+	 	\centering
+	 	\includegraphics[width=1\linewidth]{1.png}
+	 	\caption{Illustration of the domain gap between $CUHK03$
+	 		and $PRID$. It is obvious that, $CUHK03$ and $PRID$ present
+	 		different styles, \textit{e.g.}, distinct lightings, resolutions, human race, seasons, backgrounds, \text{etc.}, resulting in low accuracy
+	 		when training on $CUHK03$ and testing on $PRID$.}
+ 		\label{fig1}
+	 \end{figure}
+ \par
+ To address the second challenge, they propose to bridge
+ the domain gap by transferring persons in dataset \textit{A} to an-
+ other dataset \textit{B}. The transferred persons from \textit{A} are desired
+ to keep their identities, meanwhile present similar styles,
+ \textit{e.g.}, backgrounds, lightings, \textit{e.g.}, with persons in \textit{A}. they
+ model this transfer procedure with a Person Transfer Gener-
+ ative Adversarial Network (PTGAN), which is inspired by
+ the Cycle-GAN \cite{zhu2017unpaired}.
+ \par
+ Their contributions can be summarized into three aspects. 1) \textit{A} new challenging large-scale \textit{MSMT17} dataset
+ is collected and will be released. Compared with existing
+ datasets, \textit{MSMT17} defines more realistic and challenging
+ person ReID tasks. 2) They propose person transfer to take
+ advantages of existing labeled data from different datasets.
+ It has potential to relieve the expensive data annotations on
+ new datasets and make it easy to train person ReID systems
+ in real scenarios. An effective PTGAN model is presented
+ for person transfer. 3) This paper analyzes several issues
+ hindering the applications of person ReID. The proposed
+ \textit{MSMT17} and algorithms have potential to facilitate the future research on person ReID.
+ \section{Related Work}
+ This work is closely related with descriptor learning in
+ person ReID and image-to-image translation by GAN. they
+ briefly summarize those two categories of works in this section.
+ \bibliography{PTGAN}
+ \bibliographystyle{ieee}
+\end{document}
