@@ -1,0 +1,82 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{times}
+\usepackage{stfloats}
+\usepackage[pagebackref=true,colorlinks,linkcolor=red,citecolor=green,breaklinks=true,bookmarks=false]{hyperref}
+\cvprfinalcopy
+\def\cvprPaperID{****} % *** Enter the CVPR Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+\title{Person Transfer GAN to Bridge Domain Gap for Person Re-Identification}
+\author{Cheng Guan\\\\
+July 28, 2018}
+\begin{document}
+\maketitle
+\section{Related Work}
+\subsection{Descriptor Learning in Person ReID}
+Deep learning based descriptors have shown substantial advantages over 
+hand-crafted features on most of person ReID datasets. Some works [33][41][28] learn deep descriptors from the whole images with classification models, where each person ID is treated as a category. Some other works combine verification models with classification models to learn descriptors. Hermans \emph{et al.} \cite{hermans2017defense} 
+show that triplet loss effectively improves the performance of person ReID. Similarly, Chen \emph{et al.} \cite{chen2017beyond} proposed the quadruplet network to learn representations.
+\par
+The above works learn global descriptors and ignore the detailed cues which might be important for distinguishing persons. To explicitly utilize local cues, Cheng \emph{et al.} proposed a multi-channel part-base network to learn a discriminative descriptor features could be complementary with deep features. They divide the global image into five-length regions. For each region, a histogram descriptor is extracted and concatenate with the global performance, they ignore the misalignment issue caused by fixed body part division.
+\par
+\subsection{Image-to-Image Translation by GAN}
+Since GAN proposed by Goodfellow \emph{et al} \cite{goodfellow2014generative}, many variants of GAN have been proposed to tackle different tasks, \textit{e.g.}, natural style transfer, super-resolution, sketch-to-image generation, image-to-image translation, \textit{etc}. Among them, image-to-image translation has attracted lots of attention. PTGAN proposed by authors is similar to Cycle-GAN, it also performs image-to-image translation. Differently, extra constraints on person identity are applied to ensure transferred images can be used for model training. Zheng \emph{et al.} \cite{zheng2017unlabeled} adopt 
+GAN to generate new samples for data augmentation in person ReID. Their work differs from ours in both motivation and methodology. 
+\section{MSMT17 Dataset}
+\subsection{Overview of Previous Datasets}
+Current person ReID datasets have significantly pushed forward the research on person ReID. As shown in Table.\ref{tb1}, \textit{DukeMTMC-reID} \cite{zheng2017unlabeled}, \textit{CUHK03} \cite{li2014deepreid}, and \textit{Market1501} \cite{zheng2015scalable} involve larger numbers of cameras and identities than \textit{VIPeR} \cite{gray2008viewpoint} and \textit{PRID} \cite{hirzer2011person}. The amount of training data makes it possible to develop deep models and show their
+discriminative power in person ReID.
+%
+\begin{table*}[ht]
+\caption{Comparison between \textit{MST17} and other person ReID datasets.}
+\label{tb1}
+\begin{tabular}{c|c|c|c|c|c|c|c|c}
+	\hline 
+	Dataset & \textit{\textbf{MSMT17}} & \textit{Duke} \cite{zheng2017unlabeled}& \textit{Market} \cite{zheng2015scalable}& \textit{CUHK03} \cite{li2014deepreid}& \textit{CUHK01} \cite{li2012human}& \textit{VIPeR} \cite{gray2008viewpoint}& \textit{PRID} \cite{hirzer2011person}& \textit{CAVIAR} \cite{cheng2011custom}\\
+	\hline
+	\hline
+	BBoxes & \textbf{126,441} & 36,411 & 32,668 & 28,192 & 3,884 & 1,264 & 1,264 & 1,134 \\ 
+	\hline 
+	Identities & \textbf{4,101} & 1,812 & 1501 & 1,467 & 971 & 632 & 632 & 934 \\ 
+	\hline 
+	Cameras & \textbf{15} & 8 & 6 & 2 & 10 & 2 & 2 & 2 \\ 
+	\hline 
+	Detector & \textbf{Faster RCNN} & hand & DPM & DPM,hand & hand & hand & hand & hand \\ 
+	\hline 
+	Scene & \textbf{outdoor,indoor} & outdoor & outdoor & indoor & indoor & outdoor & outdoor & outdoor \\ 
+	\hline 
+\end{tabular}
+\end{table*}
+Although current algorithms have achieved high accuracy on those datasets,
+person ReID is far from being solved and widely applied
+in real scenarios. Therefore, it is necessary to analyze the
+limitations of existing datasets.
+\begin{figure}[t]
+	\centering
+	\includegraphics[width=1\linewidth]{1.png}
+	\caption{Comparison of person images.Each column
+		shows two sample images of the same identity.}
+	\label{fig1}
+\end{figure}
+\subsection{Description to MSMT17}
+Targeting to address above mentioned limitations, the authors
+collect a new Multi-Scene Multi-Time person ReID dataset
+(\textit{MSMT17}) by simulating the real scenarios as much as pos-
+sible. They utilize an 15-camera network deployed in cam-
+pus. This camera network contains 12 outdoor cameras and
+3 indoor cameras. They select 4 days with different weather
+conditions in a month for video collection. For each day,
+3 hours of videos taken in the morning, noon, and after-
+noon, respectively, are selected for pedestrian detection and
+annotation. Their final raw video set contains 180 hours of
+videos, 12 outdoor cameras, 3 indoor cameras, and 12 time
+slots. Sample images from \textit{MSMT17} are shown and compared in
+Fig.\ref{fig1}. Compared with existing datasets.
+ \bibliography{PTGAN2}
+\bibliographystyle{ieee}
+\end{document}
