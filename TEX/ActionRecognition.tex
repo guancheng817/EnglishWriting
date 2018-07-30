@@ -1,0 +1,89 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{times}
+\usepackage{stfloats}
+\usepackage[pagebackref=true,colorlinks,linkcolor=red,citecolor=green,breaklinks=true,bookmarks=false]{hyperref}
+\cvprfinalcopy
+\def\cvprPaperID{****} % *** Enter the CVPR Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+\title{MiCT: Mixed 3D/2D Convolutional Tube for Human Action Recognition}
+\author{Cheng Guan\\\\
+July 30, 2018}
+\begin{document}
+\maketitle
+\begin{abstract}
+  From this week, I decide to do some scientific research task with elder student and start to know about some knowledge about video action. Human actions in videos are three-dimensional (3D) signals. Recent attempts use 3D convolutional neural networks
+  (CNNs) to explore spatio-temporal information for human
+  action recognition. Though promising, 3D CNNs have not
+  achieved high performance on  this task with respect to
+  their well-established two-dimensional (2D) counterparts
+  for visual recognition in still images. The authors argue that the high
+  training complexity of spatio-temporal fusion and the huge
+  memory cost of 3D convolution hinder current 3D CNNs,
+  which stack 3D convolutions layer by layer, by outputting
+  deeper feature maps that are crucial for high-level tasks. They
+  thus propose a Mixed Convolutional Tube (MiCT) that integrates 2D CNNs with the 3D convolution module to generate deeper and more informative feature maps, while reducing training complexity in each round of spatio-temporal fusion. A new end-to-end trainable deep 3D network, MiCTNet, is also proposed based on the MiCT to better explore
+  spatio-temporal information in human actions.The dataset they use is the three well-known datasets (UCF101,Sport1M and HMDB51).
+\end{abstract}
+\section{Introduction}
+Human action recognition is a fundamental yet chal-
+lenging task with considerable efforts having been inves-
+tigated for decades. Motivated by the notable-success of
+convolutional neural networks (CNNs) for visual recogni-
+tion in still images, many recent works take advantage of
+deep models to train end-to-end networks for recognizing
+actions in videos \cite{simonyan2014two,feichtenhofer2016spatiotemporal,wang2016temporal,yue2015beyond,tran2015learning}, which sig-
+nificantly outperform hand-crafted representation learning
+methods \cite{wang2013action,wang2011action,laptev2008learning}
+\par
+Reconsidering current 3D CNN networks for action
+recognition, they notice that most of these methods share
+the same architecture that stacks 3D convolutions layer by
+layer, as proposed in C3D [30]. Since the spatial and tem-
+poral signals get coupled with each other through each 3D
+convolution, it becomes much more difficult to optimize the
+network with dozens of such 3D convolution layers because
+of the exponential growth of the solution space with respect
+to the case of 2D CNNs. Besides, the memory cost of 3D
+convolution is too high to be afforded in practice when con-
+structing a deep 3D CNN, which makes the features of the
+current 3D CNNs usually not deep enough.
+\par
+In this paper, the authors present a new deep architecture to
+address this problem and improve the performance of 3D
+CNNs for action recognition with their proposed Mixed
+2D/3D Convolutional Tube (MiCT). The MiCT enables
+the feature map at each spatio-temporal level to be much
+deeper prior to the next spatio-temporal fusion, which in
+turn makes it possible for the network to achieve better per-
+formance with fewer spatio-temporal fusions, while reduc-
+ing the complexity of each round of spatio-temporal fusion
+by using the cross-domain residual connection. In contrast
+to the 3D CNNs that stack the 3D convolution layer by
+layer, the proposed MiCT, as shown in Fig.\ref{fig1}, integrates 3D
+CNNs with 2D CNNs to enhance the feature learning with
+negligible increase in memory usage and complexity.
+%
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{1.png}
+	\caption{Illustration of their proposed MiCT that integrates 2D
+		CNNs with the 3D convolution for the spatio-temporal feature
+		learning.}
+	\label{fig1}
+\end{figure}
+%
+\section{Related Work}
+There exists an extensive body of literature on human
+action recognition. Here the authors outline work involving deep
+features and classify the related work into two categories,
+2D CNN and 3D CNN based approaches, according to the
+convolutions used in feature learning.
+\bibliographystyle{ieee}
+\bibliography{AR}
+\end{document}
