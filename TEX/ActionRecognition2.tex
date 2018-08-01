@@ -1,0 +1,88 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{times}
+\usepackage{stfloats}
+\usepackage[pagebackref=true,colorlinks,linkcolor=red,citecolor=green,breaklinks=true,bookmarks=false]{hyperref}
+\cvprfinalcopy
+\def\cvprPaperID{****} % *** Enter the CVPR Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+\title{MiCT: Mixed 3D/2D Convolutional Tube for Human Action Recognition}
+\author{Cheng Guan\\\\
+August 1, 2018}
+\begin{document}
+\maketitle
+\section{MiCT and Deep MiCT Network}
+In 2D CNN, to explore the spatio-temporal informa-
+tion in human actions, the two-stream architecture is first
+proposed in \cite{simonyan2014two} where two 2D CNNs are applied to the ap-
+pearance (RGB frames) and motion (stacked optical flow)
+domains, respectively. Based on this architecture, several
+mechanisms are presented to fuse the two networks over
+the appearance and motion \cite{karpathy2014large,feichtenhofer2016convolutional,he2016deep}.
+In this section, the authors start with a brief introduction of the 3D convolution. They then give a detailed description of the
+proposed MiCT. Lastly, their simple yet efficient deep network, MiCT-Net, is presented for human action recognition.
+\subsection{3D Convolution}
+A 3D spatio-temporal signal, \textit{e.g.} a video clip, can be
+represented as a tensor with a size of $T \times H \times W \times C$, where
+$T, H, W, C$ denotes the temporal duration, height and width
+in the spatial domain, and number of channels, respectively.
+Kernels of a 3D convolution layer are then formulated as
+a 4D tensor $\mathcal{k} \in \textbf{R}^{n_k\times t_k \times h_k\times w_k}$ (they omit the channel dimension hereafter for simplicity), where $l_k, h_k, w_k$ are the
+kernel size for the $T, H$, and $w$ dimensions, and $n_k$ denotes the number of kernels. As illustrated in Fig.~\ref{fig1}, a 3D convolution layer takes the input 3D spatio-temporal features
+$\textbf{V} = \left\lbrace \textbf{v}_{t,h,w}\right\rbrace $ and outputs the 3D dimensional feature map
+$\textbf{O}=\left\lbrace\text{o}_{t,h,w}\right\rbrace$ by implementing convolution along both the spatial and temporal dimensions of the inputs, which can be formulated as Eq.\ref{eq1}
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=1\linewidth]{2.png}
+	\caption{Illustration of a 3D convolution. The convolution kernels
+		slide along both the spatial and temporal dimensions of the input
+		3D signal and generate the 3D spatio-temporal feature maps.}
+	\label{fig1}
+\end{figure}
+\begin{equation}
+	\begin{aligned}
+	\textbf{O} = &\mathcal{K} \otimes \textbf{V},\quad where\\
+	\textbf{o}_{t_0,h_0,w_0} =& \left[q_{t_0,h_0,w_0}^1,q_{t_0,h_0,w_0}^2,...,q_{t_0,h_0,w_0}^{n_k}\right]^\mathrm{T}\\
+	q_{t_0,h_0,w_0}^{n} = &\sum_{t,w,h} \mathcal{K}_{n,t,w,h} \cdot \textbf{V}_{t,w,h}^{t_0h_0w_0}
+	\end{aligned}
+	\label{eq1}
+\end{equation}
+\par
+Here $\textbf{V}^{t_0,h_0,w_0}$
+is the sliced tensor that starts from the lo-
+cation $\left(t_0,h_0,w_0\right)$ in V and has the same size as the kernel
+$\mathcal{K}^n$. $q_{t_0,h_0,w_0}^n$ denotes the value at $\left(t_0,h_0,w_0\right)$ on the n th
+feature map output by the $n^{th}$ 3D convolution kernel.
+\subsection{MiCT}
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=1\linewidth]{1.png}
+	\caption{Illustration of MiCT that integrates 2D CNNs into 3D
+		convolution for feature learning. In each MiCT, feature maps gen-
+		erated by the 3D convolutional module (green) are added to the
+		ones produced by the residual 2D convolutional module (orange)
+		on sampled 2D inputs. The combined feature maps are then fed
+		into the concatenated 2D convolutional module (blue) to obtain
+		the final feature maps.}
+	\label{fig2}
+\end{figure}
+\par
+A 3D convolution couples spatio-temporal signals in an
+effort to effectively extract spatio-temporal features. How-
+ever, when stacked together to form 3D CNNs, it also in-
+creases the difficulty of optimization, hinders 3D CNNs
+from generating deeper feature maps for high-level tasks
+due to unaffordable memory usage and high computational
+cost, and raises the demand on huge training sets. All
+these facts together limit the performance of current existing 3D CNNs on action recognition. In order to address these problems, we propose introducing 2D CNNs, which
+can be trained effectively, constructed deeply, and learned
+with huge datasets, to 3D convolution modules and form a
+new 3D convolution unit MiCT to empower feature learning, as illustrated in Fig.\ref{fig2}.
+\bibliography{AR2}
+\bibliographystyle{ieee}
+\end{document}
