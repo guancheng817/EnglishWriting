@@ -1,0 +1,143 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{times}
+\usepackage{stfloats}
+\usepackage[pagebackref=true,colorlinks,linkcolor=red,citecolor=green,breaklinks=true,bookmarks=false]{hyperref}
+\cvprfinalcopy
+\def\cvprPaperID{****} % *** Enter the CVPR Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+\title{MiCT: Mixed 3D/2D Convolutional Tube for Human Action Recognition}
+\author{Cheng Guan\\\\
+August 3, 2018}
+\begin{document}
+\maketitle
+\section{Mixed Convolution Tube}
+\subsection{Concatenating Connections}
+As shown in Fig.\ref{fig1}, it illustrates the concatenated connection of 2D and 3D convolutions in the MiCT. We use MiCT$_con$ to represent
+the MiCT with only the concatenate connection hereafter.
+Denoting the feature map \textbf{O} at time t as $\textbf{O}^t$ , as shown in Eq.\ref{eq1}
+%
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=1\linewidth]{1.png}
+	\caption{MiCT with concatenated connections. For an input 3D
+		signal, the 3D convolution fuses spatio-temporal information and
+		obtains intermediate feature maps which are fed into the 2D con-
+		volution block to generate the final feature maps.}
+	\label{fig1}
+\end{figure}
+%
+\begin{equation}
+	\begin{aligned}
+    \textbf{O}^t=&\mathcal{M}\left(\textbf{V}^t\right)\\
+    =&\mathcal{K} \otimes \textbf{V}^t  
+    \end{aligned}
+\label{eq1}
+\end{equation}
+\par
+where $\textbf{V}^t \in \textbf{R}^{l_k\times h \times w}$ is the sliced tensor from time $t$ to
+time $t+l_k$ . Since $\mathcal{M}\left(\cdot\right)$ only outputs linearly fused spatio-
+temporal feature maps based on Eq.\ref{eq1}, a 3D CNN
+has to stack enough of $\mathcal{M}\left(\cdot\right)$ for deep and high-level feature maps which requires dynamically increased memory usage, training samples, and training complexity. They thus propose enhancing $\mathcal{M}\left(\cdot\right)$ by a deeper and capable alternative $\mathcal{G}\left(\cdot\right)$ to extract much deeper features during every round
+of spatio-temporal fusion. $\mathcal{G}\left(\cdot\right)$ is supposed to meet three re-
+quirements. It should be computationally efficient, support
+end-to-end training, and be capable of feature learning for
+2D and 3D signals. To meet these requirements, they design
+the function $\mathcal{G}\left(\cdot\right)$ by concatenating 2D CNNs after the 3D
+convolution to provide a very efficient deep feature extrac-
+tor, denoted as Eq.\ref{eq2}
+\begin{equation}
+	\mathcal{G}\left(\cdot\right) = \mathcal{H}\left(\mathcal{M}\left(\cdot\right)\right)
+	\label{eq2}
+\end{equation}
+\subsection{Cross-Domain Residual Connections}
+The MiCT with only a cross-domain residual connection,
+denoted as MiCT res , is illustrated in Fig.\ref{fig2}. It introduces
+a 2D convolution between the input and output of the 3D
+convolution to further reduce spatio-temporal fusion com-
+plexity and facilitate the optimization of the whole network.
+Following the notations in Eq.\ref{eq1}, They have the Eq.\ref{eq3}
+\begin{equation}
+\begin{aligned}
+  &\textbf{o}^\prime_{t_0,h_0,w_0} = \textbf{o}_{t_0,h_0,w_0}+
+  \textbf{S}^{t_0}_{h_0,w_0} \\ & where \quad 
+  \textbf{S}^{t_0} = \mathcal{H}^\prime\left(\textbf{V}^{t_0}\right)
+\end{aligned}
+\label{eq3}
+\end{equation}
+\par
+Here $\textbf{V}^{t_0} \in \textbf{R}^{h\times w}$ is the sliced tensor of input \textbf{V} at time
+$t_0$ , $\textbf{S}^{t_0}_{h_0,w_0}$ refers to the value at $\left(h_0,w_0\right)$ on $\textbf{S}^{t_0}$ obtained by
+$\mathcal{H}^\prime\left(\cdot\right)$, and $\mathcal{H}^\prime\left(\cdot\right)$ denotes a 2D convolution block. Unlike
+the residual connections in previous work \cite{he2016deep,feichtenhofer2016spatiotemporal}, the short-
+cut in their scheme is cross-domain, where spatio-temporal
+fusion is derived by both a 3D convolution mapping with re-
+spect to the full 3D inputs and a 2D convolution block map-
+ping with respect to the sampled 2D inputs. 
+\begin{figure}[t]
+	\centering
+	\includegraphics[width=1\linewidth]{2.png}
+	\caption{MiCT with a cross-domain residual connection. Spatio-
+		temporal fusion is achieved by both the 2D convolution block to
+		generate stationary features and 3D convolution to extract tempo-
+		ral residual information.}
+	\label{fig2}
+\end{figure}
+They propose
+a cross-domain residual connection based on the observa-
+tion that a video stream usually contains lots of redundant
+information among consecutive frames, resulting in redun-
+dant information in feature maps along the temporal dimen-
+sion. Their proposed MiCT combines the two connections and achieves the best performance among
+the three configurations MiCT con , MiCT res , and MiCT.
+\section{Deep MiCT Network}
+The authors propose a simple yet efficient deep MiCT Network
+(MiCT-Net in short) by stacking the MiCT together. The
+MiCT-Net takes the RGB video sequences as inputs and is
+end-to-end trainable. As shown in Fig.\ref{fig3}, it consists of four
+MiCTs, which means only four 3D convolutions are em-
+ployed. For the 2D convolution blocks in each MiCT block,
+we partially follow the designs of BN-inception \cite{szegedy2016rethinking}. More
+details of the network architecture are provided in Table.\ref{tb1}.
+\begin{figure*}[ht]
+	\centering
+	\includegraphics[width=1\linewidth]{3.png}
+	\caption{Illustration of the proposed MiCT-Net. Green blocks refer to 3D convolution. Orange blocks and blue blocks refer to 2D
+		convolutions for cross-domain residual connections and concatenated connections, respectively. Each mosaic-like box denotes an n-
+		channel feature map at time t (n=192, 576, 1056 in MiCT Block-1/2/3, respectively). The architecture details of each Incept. block are
+		shown in the top-right area of the figure.}
+	\label{fig3}
+\end{figure*}
+\begin{table}
+\caption{Architecture of MiCT-Net.}
+\label{tb1}
+\setlength{\tabcolsep}{2mm}{
+\begin{tabular}{c|c|c|c}
+	\hline 
+	Type & $\mathcal{M}\left(\cdot\right)$  & $\mathcal{H}\left(\cdot\right)$ & $\mathcal{M}\left(\cdot\right)$ \\ 
+	\hline 
+	\hline
+	block-1 & 3x7x7x64/$\left(1,2\right)$ & 1x1x64/1 & 7x7x64/2 \\ 
+	\hline 
+	block-2 & 3x3x3x256/$\left(2,1\right)$ & 2xInception&  1xInception\\ 
+	\hline 
+	block-3 & 3x3x3x576/$\left(2,1\right)$ & 2xInception & 1xInception \\ 
+	\hline 
+	block-4 & 3x3x3x1024/$\left(2,1\right)$ & 1xInception & 1xInception \\ 
+	\hline 
+	pooling&  \multicolumn{3}{c}{global pooling on spatial dimension }   \\ 
+	\hline 
+	fc&  \multicolumn{3}{c}{1024 $\times$ \textit{num classes} }  \\ 
+	\hline 
+	pooling&  \multicolumn{3}{c}{global pooling }  \\ 
+	\hline 
+\end{tabular}}
+\end{table}
+\bibliography{AR3}
+\bibliographystyle{ieee}
+\end{document}
