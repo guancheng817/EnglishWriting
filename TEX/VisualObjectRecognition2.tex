@@ -1,0 +1,103 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{times}
+\usepackage{stfloats}
+\usepackage[pagebackref=true,colorlinks,linkcolor=red,citecolor=green,breaklinks=true,bookmarks=false]{hyperref}
+\cvprfinalcopy
+\def\cvprPaperID{****} % *** Enter the CVPR Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+\title{Hierarchical Novelty Detection for Visual Object Recognition}
+\author{Cheng Guan\\\\
+August 7, 2018}
+\begin{document}
+\maketitle
+\section{Approach}
+From the last reading, I know that the primary
+focus of ZSL and GZSL tasks is on transfer learning for a
+new domain, and they assume that semantic information of
+all test classes is given, e.g., attributes  or text
+description \cite{changpinyo2016synthesized,fu2016semi,frome2013devise,norouzi2013zero,reed2016learning} of the objects. Therefore,
+GZSL cannot recognize a novel class if prior knowledge
+about the specific novel class is not provided. In this section, the authors define terminologies to describe hier-
+archical taxonomy and then propose models for hierarchical
+classification combined with novelty detection.
+\subsection{Taxonomy}
+A taxonomy represents a hierarchical relationship
+among classes, where each node in the taxonomy corresponds to a class or a set of indistinguishable classes. They define three types of classes as follows: 1) \textit{known leaf classes} are nodes with no child, which are known and seen during training, 2) \textit{super classes} are ancestors of the leaf classes, which are also known, and 3) \textit{novel classes} are un-
+seen during training, so they do not explicitly appear in the taxonomy. They note that all known leaf and novel classes
+have no child and are disjoint, i.e., they are neither ancestor
+nor descendant of each other. In the example in Figure 1,
+four species of cats and dogs are leaf classes, ``cat,'' ``dog,''
+and “animal” are super classes, and any other classes un-
+seen during training, e.g.,``Angola cat,'' ``Dachshund,'' and
+``Pika'' are novel classes.
+\par
+In the proposed hierarchical novelty detection frame-
+work, they first build a taxonomy with known leaf classes
+and their super classes, and at test time,  aim at predict-
+ing in the most fine-grained way using the taxonomy. In
+other words, if an image is predicted as novweel, then they try
+to assign one of the super classes, implying that the input is
+in a novel class whose closest known class in the taxonomy
+is that super class.
+\par
+To represent the hierarchical relationship, let $\mathcal{T}$ be the
+taxonomy of known classes, and for a class $y$, $\mathcal{P}\left(y\right)$ be the
+set of parents, C(y) be the set of children, $\mathcal{A}\left(y\right)$ be the set
+of ancestors including itself, and $\mathcal{N}\left(y\right)$ be the set of novel
+classes whose closest known class is $y$. And let $\mathcal{L}\left(y\right)$ be
+the set of all descendant leaves under a taxonomy $\mathcal{P}$ .
+\subsection{Top-down method}
+A natural way to perform classification using a hierarchi-
+cal taxonomy is following \textit{top-down} classification decisions
+starting from the root class, as shown in the top of Fig.~\ref{fig1}
+\begin{figure}
+	\centering
+	\includegraphics[width=1\linewidth]{1.png}
+	\caption{Illustration of two proposed approaches. In the
+		top-down method, classification starts from the root class,
+		and propagates to one of its children until the prediction
+		arrives at a known leaf class (blue) or stops if the prediction
+		is not confident, which means that the prediction is a novel
+		class whose closest super class is the predicted class. In the
+		flatten method, they add a virtual novel class (red) under each
+		super class as a representative of all novel classes, and then
+		flatten the structure for classification.}
+	\label{fig1}
+\end{figure}
+Let $\left(x,y\right) \sim P_r\left(x,y|s\right)$ be a pair of an image and its la-
+bel sampled from data distribution at a super class s, where $y \in \mathcal{C}\left(s\right)\cup \mathcal{N}\left(s\right)$. Then, the classification rule is defined as Eq.\ref{eq1}:
+\begin{equation}
+\hat{y}=
+\left\{
+\begin{array}{lr}
+\arg\max\limits_{y^\prime} P_r\left(y^\prime|x,s;\theta_s\right) \\
+\qquad \mathcal{N}\left(s\right) 
+\end{array}
+\right.
+\label{eq1}
+\end{equation}
+where $\theta_s$ and $P_r\left(\cdot|x,s;\theta_s\right)$ are the model parameters of
+$\mathcal{C}\left(s\right)\cup \mathcal{N}\left(s\right)$ and the posterior categorical distribution for
+an image $x$, respectively. They measure the prediction confidence using
+the KL divergence with respect to the uniform distribution:
+intuitively, a confidence-calibrated classifier generates near-
+uniform posterior probability vector if the classifier is not
+confident about its prediction. Hence, they interpret that the
+prediction is confident at a super class $s$ if
+\begin{equation}
+	D_{KL}\left(U\left(\cdot|s\right)||P_r\left(\cdot|x,s;\theta_s\right)\right) \geq \lambda_s
+\end{equation}
+where $\lambda_s$ is a threshold, D KL denotes the \textbf{KL} divergence,
+and $U\left(\cdot|s\right)$ is the uniform distribution when the classification is made under a super class $s$.
+
+\bibliography{VOR2}
+\bibliographystyle{ieee}
+\end{document}
+
+
