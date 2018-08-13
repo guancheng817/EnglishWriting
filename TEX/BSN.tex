@@ -1,0 +1,84 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{times}
+\usepackage{stfloats}
+\usepackage[pagebackref=true,colorlinks,linkcolor=red,citecolor=green,breaklinks=true,bookmarks=false]{hyperref}
+\cvprfinalcopy
+\def\cvprPaperID{****} % *** Enter the CVPR Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+\title{BSN: Boundary Sensitive Network for Temporal Action
+	Proposal Generation}
+\author{Cheng Guan\\\\
+August 13, 2018}
+\begin{document}
+\maketitle
+\begin{abstract}
+Temporal action proposal generation is an important yet challeng-
+ing problem, since temporal proposals with rich action content are indispensable 
+for analysing real-world videos with long duration and high proportion ir-
+relevant content. This problem requires methods not only generating proposals
+with precise temporal boundaries, but also retrieving proposals to cover truth
+action instances with high recall and high overlap using relatively fewer proposals.
+To address these difficulties, the authors introduce an effective proposal generation method, 
+named Boundary-Sensitive Network (BSN), which adopts “local to
+global” fashion. Locally, BSN first locates temporal boundaries with high probabilities,
+ then directly combines these boundaries as proposals. Globally, with
+Boundary-Sensitive Proposal feature, BSN retrieves proposals by evaluating the
+confidence of whether a proposal contains an action within its region.
+\end{abstract}
+\section{Introduce}
+Nowadays, with fast development of digital cameras and Internet, the number of videos
+is continuously booming, making automatic video content analysis methods widely re-
+quired. One major branch of video analysis is action recognition, which aims to classify
+manually trimmed video clips containing only one action instance. However, videos in
+real scenarios are usually long, untrimmed and contain multiple action instances along
+with irrelevant contents. This problem requires algorithms for another challenging task:
+temporal action detection, which aims to detect action instances in untrimmed video
+including both temporal boundaries and action classes.
+\par
+To achieve high proposal quality, a proposal generation method should generate pro-
+posals with flexible temporal durations and precise temporal boundaries, then retrieve
+proposals with reliable confidence scores, which indicate the probability of a proposal
+containing an action instance. Most recently proposal generation methods \cite{buch2017sst,caba2016fast,escorcia2016daps}
+generate proposals via sliding temporal windows of multiple durations in video with
+regular interval, then train a model to evaluate the confidence scores of generated pro-
+posals for proposals retrieving, while there is also method making external bound-
+aries regression.
+\par
+They propose the Boundary-
+Sensitive Network (BSN), which adopts ``local to global'' fashion to locally combine
+high probability boundaries as proposals and globally retrieve candidate proposals us-
+ing proposal-level feature as shown in Fig.~\ref{fig1}.
+\begin{figure}
+ \centering
+ \includegraphics[width=1\linewidth]{1.png}
+ \caption{Overview of their approach. Given an untrimmed video, (1) The authors evaluate bound-
+ 	aries and actionness probabilities of each temporal location and generate proposals
+ 	based on boundary probabilities, and (2) they evaluate the confidence scores of proposals
+ 	with proposal-level feature to get retrieved proposals.}
+ \label{fig1}
+\end{figure}
+\section{Related Work}
+\noindent\textbf{Action recognition.}Action recognition is an important branch of video related research
+areas and has been extensively studied. Earlier methods such as improved Dense Trajec-
+tory (iDT)  mainly adopt hand-crafted features such as HOF, HOG and MBH. In
+recent years, convolutional networks are widely adopted in many works \cite{feichtenhofer2016convolutional,simonyan2014two,tran2015learning,wang2015towards}
+and have achieved great performance.
+\par
+\noindent\textbf{Object detection and proposals.} Recent years, the performance of object detection has
+been significantly improved with deep learning methods. R-CNN  and its variations
+ construct an important branch of object detection methods, which adopt ``detection by classifying proposals'' framework. For proposal generation stage, besides sliding
+windows , earlier works also attempt to generate proposals by exploiting low-level
+cues such as HOG and Canny edge.
+\par
+\noindent\textbf{Temporal action detection and proposals.} Temporal action detection task aims to
+detect action instances in untrimmed videos including temporal boundaries and action classes, and can be divided into proposal and classification stages. Most detection methods \cite{singh2016untrimmed} take these two stages separately, while there is also method \cite{buch2017sst} taking
+these two stages jointly.
+\bibliography{BSN}
+\bibliographystyle{ieee}
+\end{document}
