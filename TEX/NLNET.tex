@@ -1,0 +1,104 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{times}
+\usepackage{stfloats}
+\usepackage[pagebackref=true,colorlinks,linkcolor=red,citecolor=green,breaklinks=true,bookmarks=false]{hyperref}
+\cvprfinalcopy
+\def\cvprPaperID{****} % *** Enter the CVPR Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+\title{Non-local Neural Networks}
+\author{Cheng Guan\\\\
+August 15, 2018}
+\begin{document}
+\maketitle
+\begin{abstract}
+Both convolutional and recurrent operations are building
+blocks that process one local neighborhood at a time. In
+this paper, the authors present non-local operations as a generic
+family of building blocks for capturing long-range dependencies. Inspired by the classical non-local means method
+\cite{buades2005non} in computer vision, their non-local operation computes
+the response at a position as a weighted sum of the features
+at all positions. This building block can be plugged into
+many computer vision architectures. On the task of video
+classification, even without any bells and whistles, their non-
+local models can compete or outperform current competition
+winners on both Kinetics and Charades datasets.	
+\end{abstract}
+\section{Introduction}
+Capturing long-range dependencies is of central impor-
+tance in deep neural networks. For sequential data (\textit{e.g.},
+in speech, language), recurrent operations \cite{rumelhart1986learning,hochreiter1997long} are the
+dominant solution to long-range dependency modeling. For
+image data, long-distance dependencies are modeled by the
+large receptive fields formed by deep stacks of convolutional
+operations \cite{fukushima1982neocognitron}. 
+\par
+In this paper, the authors present non-local operations as an efficient, simple, and generic component for capturing long-
+range dependencies with deep neural networks. Their proposed non-local operation is a generalization of the classical
+non-local mean operation \cite{buades2005non} in computer vision. Intuitively,
+a non-local operation computes the response at a position
+as a weighted sum of the features at all positions in the input feature maps as shown in Fig.~\ref{fig1}. The set of positions can be in space, time, or spacetime, implying that their operations are
+applicable for image, sequence, and video problems.
+\begin{figure}
+	\centering
+	\includegraphics[width=1\linewidth]{1.png}
+	\caption{A spacetime non-local operation in their network trained
+		for video classification in Kinetics. A position $x_i$'s response is
+		computed by the weighted average of the features of all positions
+		$x_j$ (only the highest weighted ones are shown here). In this example
+		computed by their model, note how it relates the ball in the first frame
+		to the ball in the last two frames.}
+	\label{fig1}
+\end{figure}
+\par
+There are several advantages of using non-local operations: (a) In contrast to the progressive behavior of recurrent
+and convolutional operations, non-local operations capture
+long-range dependencies directly by computing interactions
+between any two positions, regardless of their positional distance; (b) As we show in experiments, non-local operations
+are efficient and achieve their best results even with only
+a few layers (\textit{e.g.}, 5); (c) Finally, their non-local operations
+maintain the variable input sizes and can be easily combined
+with other operations.
+\section{Related Work}
+\noindent \textbf{Non-local image processing.} Non-local means \cite{buades2005non} is a classical filtering algorithm that computes a weighted mean of
+all pixels in an image. It allows distant pixels to contribute to
+the filtered response at a location based on patch appearance
+similarity. This non-local filtering idea was later developed
+into BM3D (block-matching 3D) \cite{dabov2007image}, which performs filtering on a group of similar, but non-local, patches. BM3D is
+a solid image denoising baseline even compared with deep
+neural networks.
+\par
+\noindent \textbf{Graphical models.} Long-range dependencies can be mod-
+eled by graphical models such as conditional random fields
+(CRF). In the context of deep neural networks, a
+CRF can be exploited to post-process semantic segmentation predictions of a network. The iterative mean-field
+inference of CRF can be turned into a recurrent network
+and trained.
+\par
+\noindent \textbf{Feedforward modeling for sequences.} Recently there
+emerged a trend of using feedforward (\textit{e.g.}, non-recurrent)
+networks for modeling sequences in speech and language \cite{gehring2017convolutional,van2016wavenet}
+. In these methods, long-term dependencies
+are captured by the large receptive fields contributed by
+very deep 1-D convolutions.
+\par
+\noindent \textbf{Self-attention.}
+Their work is related to the recent self-attention \cite{vaswani2017attention} method for machine translation. A self-attention module computes the response at a position in
+a sequence (\textit{e.g.}, a sentence) by attending to all positions
+and taking their weighted average in an embedding space.
+As they will discuss in the next, self-attention can be viewed
+as a form of the non-local mean \cite{buades2005non}, and in this sense their
+work bridges self-attention for machine translation to the
+more general class of non-local filtering operations that are
+applicable to image and video problems in computer vision.
+
+
+\bibliography{NLNET}
+\bibliographystyle{ieee}
+\end{document}
+
