@@ -1,0 +1,104 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{times}
+\usepackage{stfloats}
+\usepackage[pagebackref=true,colorlinks,linkcolor=red,citecolor=green,breaklinks=true,bookmarks=false]{hyperref}
+\cvprfinalcopy
+\def\cvprPaperID{****} % *** Enter the CVPR Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+\title{Non-local Neural Networks}
+\author{Cheng Guan\\\\
+August 17, 2018}
+\begin{document}
+\maketitle
+\section{Non-local Neural Networks}
+The authors first give a general definition of non-local operations
+and then They provide several specific instantiations of it.
+\subsection{Formulation}
+Following the non-local mean operation \cite{buades2005non}, they define a
+generic non-local operation in deep neural networks as Eq.\ref{eq1}:
+\begin{equation}
+   \textbf{y}_i = \frac{1}{\mathcal{C}\left(\textbf{x}\right)} \sum_{\forall j} f\left(\textbf{x}_i,\textbf{x}_j\right)g\left(\textbf{x}_j\right)
+   \label{eq1}
+\end{equation}
+Here $i$ is the index of an output position (in space, time, or
+spacetime) whose response is to be computed and $j$ is the
+index that enumerates all possible positions. \textbf{x} is the input
+signal (image, sequence, video; often their features) and $y$
+is the output signal of the same size as \textbf{x}. A pairwise function $f$ computes a scalar (representing relationship such as
+affinity) between $i$ and all $j$. The unary function $g$ computes
+a representation of the input signal at the position $j$. The
+response is normalized by a factor $\mathcal{C}\left(\textbf{x}\right)$.
+\subsection{Instantiations}
+\begin{figure}[t]
+	\includegraphics[width=1\linewidth]{1.png}
+	\centering
+	\caption{A spacetime non-local block.}
+	\label{fig1}
+\end{figure}
+For simplicity, The authors only consider g in the form of a linear
+embedding: $g\left(\textbf{x}_j\right)=W_g\textbf{x}_j$ , where $W_g$ is a weight matrix
+to be learned. This is implemented as, \textit{e.g.}, 1 $\times$1 convolution
+in space or 1$\times$1$\times$1 convolution in spacetime.
+\par
+Next They discuss choices for the pairwise function $f$.
+\par
+\noindent \textbf{Gaussian.} Following the non-local mean \cite{buades2005non} and bilateral filters \cite{tomasi1998bilateral}, a natural choice of $f$ is the Gaussian function. In this paper They consider:
+\begin{equation}
+	f\left(\textbf{x}_i,\textbf{x}_j\right) = e^{\textbf{x}_i^{\top}\textbf{x}_j}
+	\label{eq2}
+\end{equation}
+\par
+\noindent \textbf{Embedded Gaussian.} A simple extension of the Gaussian function is to compute similarity in an embedding space. In
+this paper they consider:
+\begin{equation}
+	f\left(\textbf{x}_i,\textbf{x}_j\right) =e^{\theta\left(\textbf{x}_i\right)^\top \phi\left(\textbf{x}_j\right)}
+	\label{eq3}
+\end{equation}
+\par
+\noindent \textbf{Dot product.} $f$ can be defined as a dot-product similarity:
+\begin{equation}
+	f\left(\textbf{x}_i,\textbf{x}_j\right)= \theta\left(\textbf{x}_i\right)^\top \phi\left(\textbf{x}_j\right)
+	\label{eq4}
+\end{equation}
+Here The authors adopt the embedded version. In this case, They set the
+normalization factor as $\mathcal{C}\left(\textbf{x}\right)=N$ , where $N$ is the number of
+positions in x, rather than the sum of $f$ , because it simplifies
+gradient computation. A normalization like this is necessary
+because the input can have variable size.
+\par
+\noindent \textbf{Concatenation.} Concatenation is used by the pairwise function in Relation Networks  for visual reasoning. They also
+evaluate a concatenation form of $f$ :
+\begin{equation}
+f\left(\textbf{x}_i,\textbf{x}_j\right)=\textbf{ReLU}\left(w_f^\top\left[\theta\left(\textbf{x}\right),\phi\left(\textbf{x}\right)\right]\right)
+\label{eq5}
+\end{equation}
+\par
+The above several variants demonstrate the flexibility
+of their generic non-local operation. The authors believe alternative
+versions are possible and may improve results.
+\section{Non-local Block}
+The authors wrap the non-local operation in Eq.\ref{eq1} into a non-local
+block that can be incorporated into many existing architectures. They define a non-local block as:
+\begin{equation}
+	\textbf{z}_i=W_z \textbf{y}_i +\textbf{x}_i
+	\label{eq6}
+\end{equation}
+where $y_i$ is given in Eq.\ref{eq1} and $\textbf{x}_i$ denotes a residual
+connection \cite{he2016deep}. The residual connection allows us to insert
+a new non-local block into any pre-trained model, without
+breaking its initial behavior.
+\par
+\noindent \textbf{Implementation of Non-local Blocks.} This follows the bottleneck
+design of \cite{he2016deep} and reduces the computation of a block by
+about a half. The weight matrix $W_z$ in Eq.\ref{eq6} computes a
+position-wise embedding on $y_i$ , matching the number of
+channels to that of $x$,as shown in Fig.~\ref{fig1}.
+\bibliography{NLNET}
+\bibliographystyle{ieee}
+\end{document}
