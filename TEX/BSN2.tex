@@ -1,0 +1,77 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{times}
+\usepackage{stfloats}
+\usepackage[pagebackref=true,colorlinks,linkcolor=red,citecolor=green,breaklinks=true,bookmarks=false]{hyperref}
+\cvprfinalcopy
+\def\cvprPaperID{****} % *** Enter the CVPR Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+\title{Non-local Neural Networks}
+\author{Cheng Guan\\\\
+August 19, 2018}
+\begin{document}
+\maketitle
+\section{Approach}
+\subsection{Problem Definition}
+An untrimmed video sequence can be denoted as $X = {\left\lbrace x_n\right\rbrace}_{n=1} $
+with $l_v$ frames, where
+$x_n$ is the $n$-th frame in $X$. Annotation of video $X$ is composed by a set of action in-
+$N_g$
+stances $\psi_g = {\left\lbrace \varphi_n = \left(t_{s,n},t_{e,n}\right)\right\rbrace}_{n=1}^{N_g}$
+, where $N_g$ is the number of truth action instances
+in video $X$, and $t_{s,n},t_{e,n}$ are starting and ending time of action instance $\varphi_n$  separately.
+Unlike detection task, classes of action instances are not considered in temporal action proposal generation.
+\subsection{Video Features Encoding}
+To generate proposals of input video, first the authors need to extract feature to encode visual
+content of video. In their framework, they adopt two-stream network \cite{simonyan2014two} as visual en-
+coder, since this architecture has shown great performance in action recognition task
+\cite{wang2016temporal} and has been widely adopted in temporal action detection and proposal generation
+tasks \cite{zhao2017temporal,gao2017cascaded}. Two-stream network contains two branches: spatial network operates
+on single RGB frame to capture appearance feature, and temporal network operates on
+stacked optical flow field to capture motion information.
+\par
+\begin{figure*}[b]
+	\centering
+	\includegraphics[width=1\linewidth]{1.png}
+	\caption{Details of proposal generation module. First, to generate
+		candidate boundary locations, the authors choose temporal locations with high boundary prob-
+		ability or being a probability peak. Then, they combine candidate starting and ending
+		locations as proposals when their duration satisfying condition. Construct BSP feature. Given a proposal and actionness probabilities sequence, they can sample actionness
+		sequence in starting, center and ending regions of proposal to construct BSP feature.}
+	\label{fig1}
+\end{figure*}
+To extract two-stream features, as shown in Fig.~\ref{fig1}, first they compose a snippets
+$l_s$
+sequence $S = {\left\lbrace s_n \right\rbrace}_{n=1}^{l_s} $
+from video $X$, where $l_s$ is the length of snippets sequence. A
+snippet $s_n=\left(x_{t_n},o_{t_n}\right)$ includes two parts: $x_{t_n}$ is the $t_n$-th RGB frame in $X$ and $o_{t_n}$ is
+stacked optical flow field derived around center frame $x_{t_n}$.
+\section{Boundary-Sensitive Network}
+To achieve high proposal quality with both precise temporal boundaries and reliable
+confidence scores, the authors adopt ``\textit{local to global}'' fashion to generate proposals. In BSN, they
+first generate candidate boundary locations, then combine these locations as proposals
+and evaluate confidence score of each proposal with proposal-level feature.
+\par
+\noindent\textbf{Network Architecture.} The architecture of BSN is presented in Fig.\ref{fig1}, which contains three modules: temporal evaluation, proposal generation and proposal evaluation. \textit{Temporal evaluation module} is a three layers temporal convolutional neural network,
+which takes the two-stream feature sequences as input, and evaluates probabilities of
+each temporal location in video whether it is inside or outside, at or not at boundaries
+of ground truth action instances, to generate sequences of starting, ending and actionness probabilities respectively.
+\par
+\noindent\textbf{Proposal generation module.} The goal of proposal generation module is to generate
+candidate proposals and construct corresponding proposal-level feature. The authors achieve this
+goal in two steps. First they locate temporal locations with high boundary probabilities,
+and combine these locations to form proposals.
+\par
+\noindent\textbf{Proposal evaluation module.} The goal of proposal evaluation module is to evaluate
+the confidence score of each proposal whether it contains an action instance within
+its duration using BSP feature. Hidden layer with 512 units handles the input
+of BSP feature $f_{BSP}$ with Relu activation. The output layer outputs confidence score
+$p_{conf}$ with sigmoid activation,
+\bibliography{BSN}
+\bibliographystyle{ieee}
+\end{document}
